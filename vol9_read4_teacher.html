@@ -1,0 +1,2792 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>G.EDU — IELTS Reading Test [SỐ TEST]</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   G.EDU — IELTS READING TEST — UX/UI TEMPLATE
+   ------------------------------------------------------------
+   Cách dùng: phần nội dung đề (passages, questions, đáp án) do
+   AI Studio xử lý và chèn vào các vùng [PLACEHOLDER]. File này
+   chịu trách nhiệm toàn bộ khung UX/UI + logic vận hành.
+   ============================================================ */
+
+:root{
+  --navy: #1a1208;
+  --navy-deep: #0f0a05;
+  --gold: #D4AF37;
+  --gold-soft: #e8cf7a;
+  --cream: #fdfcfb;
+  --ink: #2d3436;
+  --ink-soft: #6b6560;
+  --line: #e8e2d8;
+  --flag: #e17055;
+  --danger: #c0392b;
+  --success: #2e7d4f;
+
+  --hl-yellow: #fff176;
+  --hl-green: #a5d6a7;
+  --hl-blue: #90caf9;
+  --hl-pink: #f48fb1;
+
+  --sidebar-w: 280px;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Be Vietnam Pro', sans-serif;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  overflow:hidden;
+  -webkit-font-smoothing: antialiased;
+}
+::selection{ background: var(--gold-soft); color: var(--navy); }
+button{ font-family: inherit; cursor:pointer; border:none; background:none; }
+input, select, textarea{ font-family: inherit; }
+::-webkit-scrollbar{ width:9px; height:9px; }
+::-webkit-scrollbar-track{ background: transparent; }
+::-webkit-scrollbar-thumb{ background: #c9c0ad; border-radius:10px; }
+::-webkit-scrollbar-thumb:hover{ background: var(--gold); }
+
+.screen{ display:none; width:100%; height:100%; }
+.screen.active{ display:flex; }
+
+/* ============================================================
+   1. LOGIN SCREEN
+   ============================================================ */
+#screen-login{
+  align-items:center; justify-content:center;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(212,175,55,0.08), transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(212,175,55,0.06), transparent 45%),
+    var(--navy-deep);
+  position:relative;
+}
+#screen-login::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: linear-gradient(rgba(212,175,55,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  pointer-events:none;
+}
+.login-card{
+  position:relative;
+  width:min(440px, 92vw);
+  background: var(--cream);
+  border-radius:18px;
+  padding:44px 40px 36px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+  text-align:center;
+  animation: cardIn .6s cubic-bezier(.22,1,.36,1);
+}
+@keyframes cardIn{ from{ opacity:0; transform:translateY(18px) scale(.98);} to{opacity:1; transform:none;} }
+.login-logo{
+  font-family: var(--font-display);
+  font-weight:700; font-size:30px; letter-spacing:2px;
+  color: var(--navy); margin-bottom:2px;
+}
+.login-logo span{ color: var(--gold); }
+.login-sub{
+  font-size:12.5px; letter-spacing:3px; text-transform:uppercase;
+  color: var(--ink-soft); margin-bottom:6px; font-weight:600;
+}
+.login-test-name{
+  font-family: var(--font-display);
+  font-size:17px; color: var(--gold); font-style:italic; margin-bottom:26px;
+}
+.login-divider{
+  width:46px; height:2px; background:var(--gold); margin:0 auto 26px; border-radius:2px;
+}
+.login-field{ text-align:left; margin-bottom:16px; }
+.login-field label{
+  display:block; font-size:11.5px; font-weight:700; letter-spacing:1px;
+  text-transform:uppercase; color: var(--ink-soft); margin-bottom:7px;
+}
+.login-field input{
+  width:100%; padding:13px 14px; border:1.5px solid var(--line); border-radius:9px;
+  font-size:15px; font-weight:600; letter-spacing:0.5px; color:var(--navy);
+  background:#fff; transition: border-color .2s, box-shadow .2s;
+  text-transform:uppercase;
+}
+.login-field input::placeholder{ text-transform:none; font-weight:400; color:#b6afa2; font-size:13px; }
+.login-field input:focus{ outline:none; border-color: var(--gold); box-shadow:0 0 0 3px rgba(212,175,55,0.18); }
+.login-note{
+  font-size:12px; line-height:1.6; color: var(--ink-soft); background:#f6f2e9;
+  border-radius:9px; padding:12px 13px; margin: 18px 0 22px; text-align:left;
+  border-left:3px solid var(--gold);
+}
+.login-btn{
+  width:100%; padding:14px; border-radius:9px; background: var(--navy);
+  color: var(--gold); font-weight:700; font-size:14.5px; letter-spacing:1.5px;
+  text-transform:uppercase; transition: transform .15s, box-shadow .15s, background .2s;
+}
+.login-btn:hover{ background: var(--navy-deep); box-shadow:0 8px 22px rgba(0,0,0,0.25); transform:translateY(-1px); }
+.login-btn:active{ transform:translateY(0); }
+.login-error{
+  display:none; color: var(--danger); font-size:12.5px; font-weight:600;
+  margin-top:12px; text-align:left;
+}
+
+/* ============================================================
+   2. EXAM SCREEN — LAYOUT (TOP BAR + 2 PANELS)
+   ============================================================ */
+#screen-exam{ display:none; height:100%; width:100%; }
+#screen-exam.active{ display:flex; }
+
+.exam-shell{
+  display:flex; flex-direction:column; width:100%; height:100%;
+}
+
+/* ---- Top Bar ---- */
+.topbar{
+  background: var(--navy); color:#fff; flex-shrink:0;
+  display:flex; align-items:center; gap:0;
+  height:52px; border-bottom:2px solid rgba(212,175,55,0.3);
+  padding:0; overflow:hidden;
+}
+.tb-brand{
+  display:flex; align-items:center; gap:10px;
+  padding:0 16px; border-right:1px solid rgba(255,255,255,0.1);
+  flex-shrink:0; height:100%;
+}
+.tb-brand-logo{
+  font-family: var(--font-display); font-weight:700; font-size:17px;
+  color: var(--gold); letter-spacing:1.5px; line-height:1;
+}
+.tb-brand-sub{
+  font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase;
+  color:rgba(255,255,255,0.4); margin-top:3px;
+}
+.tb-student{
+  padding:0 14px; border-right:1px solid rgba(255,255,255,0.1);
+  font-size:11.5px; color:rgba(255,255,255,0.7); flex-shrink:0;
+  white-space:nowrap; height:100%; display:flex; align-items:center; gap:4px;
+}
+.tb-student b{ color:#fff; font-weight:600; }
+
+/* Question Map nằm ngang inline */
+.tb-qmap-wrap{
+  flex:1; padding:0 12px; height:100%; display:flex; align-items:center; gap:10px;
+  overflow:hidden; min-width:0;
+}
+.tb-qmap-label{
+  font-size:9px; letter-spacing:1px; text-transform:uppercase;
+  color:rgba(255,255,255,0.35); white-space:nowrap; flex-shrink:0;
+}
+.qmap{
+  display:flex; flex-wrap:nowrap; gap:3px; overflow-x:auto; flex:1;
+  scrollbar-width:none; /* Firefox */
+}
+.qmap::-webkit-scrollbar{ display:none; }
+.qmap-cell{
+  flex-shrink:0; width:24px; height:24px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:4px; border:1px solid rgba(255,255,255,0.18);
+  font-size:9.5px; font-weight:600; color:rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.03); transition: all .12s; cursor:pointer;
+}
+.qmap-cell:hover{ border-color: var(--gold); color:#fff; }
+.qmap-cell.answered{ background: var(--gold); border-color:var(--gold); color: var(--navy); }
+.qmap-cell.flagged{ border-color: var(--flag); color: var(--flag); }
+.qmap-cell.answered.flagged{ background: var(--gold); border-color: var(--flag); color: var(--navy); position:relative; }
+.qmap-cell.answered.flagged::after{
+  content:""; position:absolute; top:-2px; right:-2px; width:5px; height:5px;
+  border-radius:50%; background: var(--flag); border:1px solid var(--navy);
+}
+.qmap-cell.current{ outline:2px solid #fff; outline-offset:1px; }
+.tb-map-progress{
+  font-size:10px; font-weight:700; color:rgba(255,255,255,0.5); white-space:nowrap; flex-shrink:0;
+}
+
+/* Timer + Actions */
+.tb-timer-wrap{
+  padding:0 14px; border-left:1px solid rgba(255,255,255,0.1);
+  border-right:1px solid rgba(255,255,255,0.1);
+  height:100%; display:flex; align-items:center; gap:6px; flex-shrink:0;
+}
+.tb-timer-label{ font-size:9px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+.sb-timer{
+  font-family: var(--font-display); font-weight:700; font-size:20px; color:#fff;
+  font-variant-numeric: tabular-nums; line-height:1; letter-spacing:1px;
+}
+.sb-timer.warn{ color: var(--flag); animation: pulseWarn 1s infinite; }
+@keyframes pulseWarn{ 0%,100%{opacity:1;} 50%{opacity:.55;} }
+
+.tb-actions{
+  display:flex; align-items:center; gap:8px; padding:0 14px; height:100%; flex-shrink:0;
+}
+.sb-btn{
+  height:32px; padding:0 12px; border-radius:7px; font-size:11px; font-weight:700;
+  letter-spacing:0.8px; text-transform:uppercase; transition: all .15s;
+  white-space:nowrap; display:flex; align-items:center; gap:5px;
+}
+.sb-btn-flag{
+  background:transparent; border:1.5px solid var(--flag); color: var(--flag);
+}
+.sb-btn-flag:hover{ background: rgba(225,112,85,0.15); }
+.sb-btn-submit{
+  background: transparent; border:1.5px solid var(--gold); color: var(--gold);
+}
+.sb-btn-submit:hover{ background: var(--gold); color: var(--navy); }
+
+/* ---- Main exam area ---- */
+.exam-main{ flex:1; display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+
+.tabs-bar{
+  display:flex; gap:4px; padding:0 18px; background:#fff; border-bottom:2px solid var(--navy);
+  flex-shrink:0;
+}
+.tab-btn{
+  padding:13px 22px; font-size:13.5px; font-weight:600; color: var(--ink-soft);
+  border-radius:8px 8px 0 0; transition:all .15s; position:relative; top:1px;
+}
+.tab-btn:hover{ color: var(--navy); background:#f6f2e9; }
+.tab-btn.active{ color: var(--navy); background: var(--cream); border:2px solid var(--navy); border-bottom:2px solid var(--cream); }
+
+.split-container{
+  flex:1; display:flex; min-height:0; position:relative;
+  user-select:text;
+}
+.split-container.locked-select{ user-select:none; }
+
+.panel{
+  height:100%; overflow-y:auto; background:#fff;
+}
+.panel-left{ width:50%; padding:34px 38px; border-right:1px solid var(--line); }
+.panel-right{ width:50%; padding:34px 38px; background: var(--cream); }
+
+.resizer{
+  width:7px; cursor:col-resize; background: var(--line); flex-shrink:0;
+  transition: background .15s; position:relative;
+}
+.resizer:hover, .resizer.active{ background: var(--gold); }
+.resizer::after{
+  content:""; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:3px; height:34px; border-radius:3px; background:rgba(0,0,0,0.15);
+}
+
+.passage-title{
+  font-family: var(--font-display); font-weight:700; font-size:21px; color: var(--navy);
+  margin-bottom:4px;
+}
+.passage-meta{ font-size:11.5px; color: var(--ink-soft); text-transform:uppercase; letter-spacing:1px; margin-bottom:22px; }
+.passage-body{ font-size:15px; line-height:1.85; color:#33302b; }
+.passage-body p{ margin-bottom:16px; text-align:justify; }
+.passage-body strong{ color: var(--navy); }
+
+.qgroup{ margin-bottom:32px; }
+.qgroup-instructions{
+  background:#fff; border:1px solid var(--line); border-left:3px solid var(--gold);
+  border-radius:8px; padding:14px 16px; margin-bottom:16px; font-size:13.5px; line-height:1.6; color: var(--ink);
+}
+.qgroup-instructions b{ color:var(--navy); }
+
+.qitem{
+  display:flex; gap:12px; padding:14px 14px 14px 10px; border-radius:10px;
+  margin-bottom:8px; background:#fff; border:1px solid var(--line);
+  scroll-margin-top: 24px; transition: border-color .2s, box-shadow .2s;
+}
+.qitem:hover{ border-color:#d8cfba; }
+.qitem.answered{ border-left:3px solid var(--gold); }
+.qitem.flagged{ box-shadow: inset 3px 0 0 var(--flag); }
+
+.qnum{
+  flex-shrink:0; width:30px; height:30px; border-radius:50%;
+  background: var(--navy); color: var(--gold); font-weight:700; font-size:13px;
+  display:flex; align-items:center; justify-content:center;
+}
+.qbody{ flex:1; min-width:0; }
+.qtext{ font-size:14.5px; line-height:1.6; margin-bottom:10px; color: var(--ink); }
+
+.qflag-btn{
+  flex-shrink:0; width:22px; height:22px; border-radius:6px; border:1.5px solid var(--line);
+  display:flex; align-items:center; justify-content:center; font-size:12px;
+  color:#c9c0ad; transition: all .15s; align-self:flex-start;
+}
+.qflag-btn:hover{ border-color: var(--flag); }
+.qflag-btn.on{ background: var(--flag); border-color: var(--flag); color:#fff; }
+
+/* answer inputs */
+.ans-text{
+  width:100%; max-width:260px; padding:9px 11px; border:1.5px solid var(--line);
+  border-radius:7px; font-size:14px; font-weight:500; color: var(--navy); background:#fff;
+}
+.ans-text:focus{ outline:none; border-color: var(--gold); box-shadow:0 0 0 3px rgba(212,175,55,0.15); }
+
+.ans-select{
+  padding:9px 11px; border:1.5px solid var(--line); border-radius:7px; font-size:14px;
+  background:#fff; color: var(--navy); font-weight:500; min-width:90px;
+}
+.ans-select:focus{ outline:none; border-color: var(--gold); }
+
+.ans-options{ display:flex; flex-direction:column; gap:8px; }
+.ans-opt{
+  display:flex; align-items:flex-start; gap:9px; padding:9px 11px; border-radius:7px;
+  border:1.5px solid var(--line); cursor:pointer; transition: all .15s; background:#fff;
+}
+.ans-opt:hover{ border-color: var(--gold-soft); background:#fdfaf0; }
+.ans-opt input{ margin-top:2px; accent-color: var(--gold); flex-shrink:0; }
+.ans-opt span{ font-size:13.5px; line-height:1.5; }
+.ans-opt.checked{ border-color: var(--gold); background:#fdfaf0; }
+
+/* highlight marks */
+.hl-yellow{ background: var(--hl-yellow); border-radius:2px; }
+.hl-green{ background: var(--hl-green); border-radius:2px; }
+.hl-blue{ background: var(--hl-blue); border-radius:2px; }
+.hl-pink{ background: var(--hl-pink); border-radius:2px; }
+
+/* highlight floating toolbar */
+.hl-toolbar{
+  position:fixed; display:none; gap:6px; background: var(--navy); padding:7px 8px;
+  border-radius:10px; box-shadow:0 10px 28px rgba(0,0,0,0.3); z-index:500;
+  align-items:center;
+}
+.hl-toolbar.show{ display:flex; }
+.hl-swatch{
+  width:24px; height:24px; border-radius:50%; border:2px solid rgba(255,255,255,0.5);
+  transition: transform .12s;
+}
+.hl-swatch:hover{ transform:scale(1.15); }
+.hl-swatch[data-c="yellow"]{ background: var(--hl-yellow); }
+.hl-swatch[data-c="green"]{ background: var(--hl-green); }
+.hl-swatch[data-c="blue"]{ background: var(--hl-blue); }
+.hl-swatch[data-c="pink"]{ background: var(--hl-pink); }
+.hl-swatch-erase{
+  width:24px; height:24px; border-radius:50%; border:2px solid rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.08); color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center;
+}
+
+/* ============================================================
+   3. MODALS / OVERLAYS
+   ============================================================ */
+.overlay{
+  position:fixed; inset:0; background:rgba(15,10,5,0.55); backdrop-filter:blur(2px);
+  display:none; align-items:center; justify-content:center; z-index:1000; padding:20px;
+}
+.overlay.show{ display:flex; }
+.modal{
+  background:#fff; border-radius:16px; max-width:460px; width:100%;
+  padding:32px 30px 26px; box-shadow:0 30px 70px rgba(0,0,0,0.4);
+  animation: cardIn .35s cubic-bezier(.22,1,.36,1);
+}
+.modal-title{ font-family: var(--font-display); font-weight:700; font-size:21px; color: var(--navy); margin-bottom:10px; }
+.modal-text{ font-size:14px; line-height:1.65; color: var(--ink-soft); margin-bottom:22px; }
+.modal-text b{ color: var(--danger); }
+.modal-actions{ display:flex; gap:10px; }
+.modal-btn{
+  flex:1; padding:12px; border-radius:9px; font-size:13.5px; font-weight:700;
+  letter-spacing:0.5px; transition: all .15s;
+}
+.modal-btn-secondary{ background:#f1ede4; color: var(--ink); }
+.modal-btn-secondary:hover{ background:#e8e2d4; }
+.modal-btn-primary{ background: var(--navy); color: var(--gold); }
+.modal-btn-primary:hover{ background: var(--navy-deep); }
+
+/* Flagged questions panel */
+.flagpanel{
+  background:#fff; border-radius:16px; max-width:560px; width:100%; max-height:80vh;
+  display:flex; flex-direction:column; box-shadow:0 30px 70px rgba(0,0,0,0.4);
+  animation: cardIn .35s cubic-bezier(.22,1,.36,1);
+}
+.flagpanel-head{ padding:22px 26px 16px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+.flagpanel-head h3{ font-family: var(--font-display); font-size:19px; color: var(--navy); }
+.flagpanel-close{ font-size:20px; color: var(--ink-soft); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.flagpanel-close:hover{ background:#f1ede4; }
+.flagpanel-body{ padding:14px 26px 22px; overflow-y:auto; }
+.flagpanel-empty{ text-align:center; padding:40px 0; color: var(--ink-soft); font-size:13.5px; }
+.flagitem{
+  display:flex; justify-content:space-between; align-items:center; padding:12px 14px;
+  border:1px solid var(--line); border-radius:9px; margin-bottom:8px; transition: all .15s;
+}
+.flagitem:hover{ border-color: var(--gold); background:#fdfaf0; }
+.flagitem-left{ display:flex; align-items:center; gap:10px; }
+.flagitem-num{ width:26px; height:26px; border-radius:50%; background: var(--navy); color: var(--gold); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.flagitem-ans{ font-size:12.5px; color: var(--ink-soft); }
+.flagitem-ans.empty{ color: var(--flag); font-style:italic; }
+.flagitem-go{ font-size:11.5px; font-weight:700; color: var(--gold); text-transform:uppercase; letter-spacing:0.5px; }
+
+/* ============================================================
+   4. RESULT SCREEN
+   ============================================================ */
+#screen-result{
+  align-items:center; justify-content:center; overflow-y:auto;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(212,175,55,0.07), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(212,175,55,0.05), transparent 45%),
+    var(--navy-deep);
+  padding:40px 20px;
+}
+.result-wrap{ width:min(560px, 100%); }
+.result-card{
+  background:#fff; border-radius:22px; padding:46px 42px 38px; text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,0.45);
+  animation: cardIn .6s cubic-bezier(.22,1,.36,1);
+}
+.result-check{
+  width:74px; height:74px; border-radius:50%; background: var(--gold);
+  display:flex; align-items:center; justify-content:center; margin:0 auto 22px;
+  box-shadow:0 10px 26px rgba(212,175,55,0.35);
+}
+.result-check svg{ width:32px; height:32px; }
+.result-title{
+  font-family: var(--font-display); font-weight:700; font-size:25px; color: var(--navy);
+  line-height:1.35;
+}
+.result-title .name-hl{ color: var(--gold); }
+.result-sub{
+  font-size:12.5px; letter-spacing:1.5px; text-transform:uppercase; color: var(--ink-soft);
+  font-weight:600; margin:10px 0 28px;
+}
+.result-stats{
+  display:flex; align-items:stretch; justify-content:center; gap:0; margin-bottom:30px;
+}
+.result-stat{ flex:1; padding:0 18px; }
+.result-stat-divider{ width:1px; background: var(--line); }
+.result-stat-num{
+  font-family: var(--font-display); font-weight:700; font-size:36px; color: var(--navy);
+}
+.result-stat-num.gold{ color: var(--gold); }
+.result-stat-label{
+  font-size:11px; letter-spacing:1px; text-transform:uppercase; color: var(--ink-soft);
+  font-weight:600; margin-top:4px;
+}
+.result-cta-row{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.result-cta{
+  padding:14px; border-radius:11px; font-size:14.5px; font-weight:700;
+  letter-spacing:0.3px; transition: all .15s; display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.result-cta-primary{ background: var(--navy); color: var(--gold); }
+.result-cta-primary:hover{ background: var(--navy-deep); transform:translateY(-1px); }
+.result-cta-secondary{ background:#fdfaf0; border:1.5px solid var(--gold-soft); color: var(--navy); }
+.result-cta-secondary:hover{ background:#fbf3da; }
+
+/* ============================================================
+   5. ANSWER SHEET SCREEN (screenshot-friendly grid)
+   ============================================================ */
+#screen-sheet{
+  align-items:flex-start; justify-content:center; overflow-y:auto;
+  background: var(--cream); padding:36px 20px;
+}
+.sheet-wrap{ width:min(980px, 100%); }
+.sheet-card{
+  background:#fff; border-radius:18px; padding:32px 34px; box-shadow:0 20px 50px rgba(0,0,0,0.1);
+  border:1px solid var(--line);
+}
+.sheet-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; flex-wrap:wrap; gap:10px; }
+.sheet-title{ font-family: var(--font-display); font-weight:700; font-size:22px; color: var(--navy); }
+.sheet-meta{ font-size:12.5px; color: var(--ink-soft); text-align:right; line-height:1.6; }
+.sheet-warn{
+  background:#fff0e9; border:1.5px solid #f3c4a8; border-left:4px solid var(--flag);
+  border-radius:10px; padding:13px 16px; font-size:13px; line-height:1.6; color:#8a3d22;
+  margin:18px 0 22px; font-weight:600;
+}
+.sheet-grid{
+  display:grid; grid-template-columns: repeat(10, 1fr); gap:8px;
+}
+.sheet-cell{
+  border:1.5px solid var(--line); border-radius:8px; padding:8px 6px; text-align:center;
+}
+.sheet-cell .n{ font-size:10.5px; color: var(--ink-soft); font-weight:700; margin-bottom:3px; }
+.sheet-cell .v{ font-size:13px; font-weight:700; color: var(--navy); word-break:break-word; }
+.sheet-cell .v.empty{ color:#c9c0ad; font-weight:500; font-style:italic; font-size:11px; }
+.sheet-footer{ display:flex; justify-content:center; margin-top:26px; }
+
+/* ============================================================
+   6. REVIEW MODE BANNER
+   ============================================================ */
+.review-banner{
+  display:none; background: var(--navy); color:#fff; padding:11px 22px;
+  align-items:center; justify-content:space-between; flex-shrink:0;
+  font-size:12.5px;
+}
+.review-banner.show{ display:flex; }
+.review-banner b{ color: var(--gold); }
+.review-banner-btn{
+  background: var(--gold); color: var(--navy); padding:8px 16px; border-radius:7px;
+  font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;
+}
+.review-banner-btn:hover{ opacity:0.88; }
+
+/* ============================================================
+   7. LOADING / TOAST
+   ============================================================ */
+.toast{
+  position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+  background: var(--navy); color:#fff; padding:13px 22px; border-radius:10px;
+  font-size:13px; box-shadow:0 12px 30px rgba(0,0,0,0.3); z-index:2000;
+  opacity:0; pointer-events:none; transition: all .3s;
+}
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+.spinner{
+  width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff;
+  border-radius:50%; animation: spin .7s linear infinite; display:inline-block; vertical-align:middle; margin-right:8px;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* ============================================================
+   8. RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px){
+  .panel-left, .panel-right{ padding:24px 22px; }
+  .tb-brand-sub, .tb-student{ display:none; } /* ẩn bớt trên màn hẹp */
+}
+@media (max-width: 860px){
+  .split-container{ flex-direction:column; }
+  .resizer{ display:none; }
+  .panel-left, .panel-right{ width:100% !important; height:50%; }
+  .sheet-grid{ grid-template-columns: repeat(5,1fr); }
+  .tb-qmap-wrap{ display:none; } /* ẩn qmap ngang trên mobile, vẫn mở được qua panel flag */
+}
+@media (max-height: 720px){
+  .topbar{ height:44px; }
+  .sb-timer{ font-size:17px; }
+  .sb-btn{ height:28px; font-size:10px; padding:0 9px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 1. LOGIN SCREEN ================= -->
+<div class="screen active" id="screen-login">
+  <div class="login-card">
+    <div class="login-logo">G<span>.</span>EDU</div>
+    <div class="login-sub">IELTS Academic Reading</div>
+    <div class="login-test-name" id="login-test-name">[TÊN BÀI TEST — VD: Reading Test 7]</div>
+    <div class="login-divider"></div>
+
+    <div class="login-field">
+      <label>Họ và tên học sinh</label>
+      <input type="text" id="input-name" placeholder="VIẾT IN HOA" autocomplete="off">
+    </div>
+    <div class="login-field">
+      <label>Lớp học</label>
+      <input type="text" id="input-class" placeholder="VIẾT IN HOA" autocomplete="off">
+    </div>
+
+    <div class="login-note" data-locked-id="login-note"><!-- nội dung được khóa, JS sẽ tự bơm vào lúc tải trang --></div>
+
+    <button class="login-btn" id="btn-start">Bắt đầu làm bài</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ================= 2. EXAM SCREEN ================= -->
+<div class="screen" id="screen-exam">
+  <div class="exam-shell">
+
+    <!-- ---- Top Bar ---- -->
+    <div class="topbar">
+      <div class="tb-brand">
+        <div>
+          <div class="tb-brand-logo">G<span style="color:var(--gold)">.</span>EDU</div>
+          <div class="tb-brand-sub" id="sb-test-name">[TÊN BÀI TEST]</div>
+        </div>
+      </div>
+
+      <div class="tb-student">
+        <b id="sb-student-name">—</b>&nbsp;·&nbsp;Lớp:&nbsp;<span id="sb-student-class">—</span>
+      </div>
+
+      <div class="tb-qmap-wrap">
+        <div class="tb-qmap-label">MAP</div>
+        <div class="qmap" id="qmap"></div>
+        <div class="tb-map-progress" id="sb-map-progress">0/40</div>
+      </div>
+
+      <div class="tb-timer-wrap">
+        <div class="tb-timer-label">Còn lại</div>
+        <div class="sb-timer" id="sb-timer">60:00</div>
+      </div>
+
+      <div class="tb-actions">
+        <button class="sb-btn sb-btn-flag" id="btn-open-flags">🚩 Đánh dấu</button>
+        <button class="sb-btn sb-btn-submit" id="btn-submit">Nộp bài</button>
+      </div>
+    </div>
+
+    <!-- ---- Main ---- -->
+    <main class="exam-main">
+      <div class="review-banner" id="review-banner">
+        <span data-locked-id="review-banner-text"><!-- khóa, JS bơm --></span>
+        <button class="review-banner-btn" id="btn-back-to-result">Quay lại kết quả</button>
+      </div>
+
+      <div class="tabs-bar" id="tabs-bar"><!-- [JS GENERATED: passage tab buttons] --></div>
+
+      <div class="split-container" id="split-container">
+        <div class="panel panel-left" id="panel-passage">
+          <!-- [PLACEHOLDER: PASSAGE CONTENT — AI Studio chèn vào đây cho từng tab/passage] -->
+          <div class="passage-title">[Tiêu đề bài đọc]</div>
+          <div class="passage-meta">Passage 1</div>
+          <div class="passage-body">
+            <p>[Nội dung đoạn văn...]</p>
+          </div>
+        </div>
+
+        <div class="resizer" id="resizer"></div>
+
+        <div class="panel panel-right" id="panel-questions">
+          <!-- [PLACEHOLDER: QUESTION GROUPS — AI Studio chèn .qgroup theo từng passage] -->
+          <div class="qgroup">
+            <div class="qgroup-instructions"><b>Questions 1–5</b><br>[Hướng dẫn câu hỏi...]</div>
+            <!-- mỗi câu hỏi: .qitem có qnum / qtext / input đáp án / qflag-btn -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Floating highlight toolbar -->
+<div class="hl-toolbar" id="hl-toolbar">
+  <div class="hl-swatch" data-c="yellow"></div>
+  <div class="hl-swatch" data-c="green"></div>
+  <div class="hl-swatch" data-c="blue"></div>
+  <div class="hl-swatch" data-c="pink"></div>
+  <div class="hl-swatch-erase" id="hl-erase">✕</div>
+</div>
+
+<!-- ================= MODALS ================= -->
+
+<!-- Submit confirm modal -->
+<div class="overlay" id="overlay-submit">
+  <div class="modal">
+    <div class="modal-title" data-locked-id="submit-modal-title"><!-- khóa, JS bơm --></div>
+    <div class="modal-text">
+      <span data-locked-id="submit-modal-prefix"><!-- khóa --></span> <b id="modal-answered-count">0</b><span data-locked-id="submit-modal-suffix"><!-- khóa --></span>
+      <span id="modal-unanswered-warn"></span><br><br>
+      <span data-locked-id="submit-modal-footer"><!-- khóa --></span>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-secondary" id="btn-cancel-submit">Làm tiếp</button>
+      <button class="modal-btn modal-btn-primary" id="btn-confirm-submit">Nộp bài</button>
+    </div>
+  </div>
+</div>
+
+<!-- Flagged questions panel -->
+<div class="overlay" id="overlay-flags">
+  <div class="flagpanel">
+    <div class="flagpanel-head">
+      <h3>🚩 Câu đã đánh dấu</h3>
+      <button class="flagpanel-close" id="btn-close-flags">✕</button>
+    </div>
+    <div class="flagpanel-body" id="flagpanel-body">
+      <div class="flagpanel-empty" data-locked-id="flagpanel-empty"><!-- khóa, JS bơm --></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 3. RESULT SCREEN ================= -->
+<div class="screen" id="screen-result">
+  <div class="result-wrap">
+    <div class="result-card">
+      <div class="result-check">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 13l4 4L19 7" stroke="#1a1208" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="result-title">
+        Chúc mừng <span class="name-hl" id="result-name">—</span><br>đã hoàn thành bài thi!
+      </div>
+      <div class="result-sub">G.EDU — <span id="result-test-name">[Tên bài test]</span></div>
+
+      <div class="result-stats">
+        <div class="result-stat">
+          <div class="result-stat-num" id="result-score">0/40</div>
+          <div class="result-stat-label">Số câu đúng</div>
+        </div>
+        <div class="result-stat-divider"></div>
+        <div class="result-stat">
+          <div class="result-stat-num gold" id="result-band">—</div>
+          <div class="result-stat-label">Band Score</div>
+        </div>
+      </div>
+
+      <div class="result-cta-row">
+        <button class="result-cta result-cta-primary" id="btn-go-sheet">📋 Xem Bảng Tổng Hợp Đáp Án</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 4. ANSWER SHEET SCREEN ================= -->
+<div class="screen" id="screen-sheet">
+  <div class="sheet-wrap">
+    <div class="sheet-card">
+      <div class="sheet-head">
+        <div class="sheet-title">Answer Sheet</div>
+        <div class="sheet-meta">
+          <span id="sheet-name">—</span> · Lớp <span id="sheet-class">—</span><br>
+          <span id="sheet-test-name">[TÊN BÀI TEST]</span>
+        </div>
+      </div>
+      <div class="sheet-warn" data-locked-id="sheet-warn"><!-- khóa, JS bơm --></div>
+      <div class="sheet-grid" id="sheet-grid"><!-- [JS GENERATED: 40 sheet-cell] --></div>
+      <div class="sheet-footer">
+        <button class="result-cta result-cta-primary" id="btn-go-review">Đã lưu — Xem lại bài làm →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   G.EDU IELTS READING — CORE LOGIC
+   ------------------------------------------------------------
+   AI STUDIO HƯỚNG DẪN CHÈN DATA: tìm các khối đánh dấu
+   "// ===== TODO[AI STUDIO]" bên dưới — đó là toàn bộ chỗ cần
+   nhét nội dung đề + đáp án. Phần còn lại là logic UX/UI dùng
+   chung, không cần đụng vào.
+   ============================================================ */
+
+/* ---------- 0. CONFIG — TODO[AI STUDIO]: điền các giá trị này ---------- */
+const TEST_NAME   = 'vol9_read4';        // TODO: vd 'reading_test7' — dùng để route sheet tab + localStorage prefix
+const TEST_LABEL  = 'Vol 9 Reading Test 4';       // TODO: tên hiển thị, vd 'Reading Test 7'
+const GAS_URL     = 'https://script.google.com/macros/s/AKfycbze-ULqfpnB5IcJxAvg2m7IfSqkoUY4JmoHnjvpuGvxodzmLbhHHlcqxfcnha2aahY/exec';
+const DURATION_MIN = 60;                    // phút làm bài
+const TOTAL_QUESTIONS = 40;
+const LS_PREFIX = TEST_NAME.replace('reading_','rt_') + '_'; // vd rt_testX_ -> tuỳ chỉnh nếu muốn ngắn hơn (rt7_)
+
+document.getElementById('login-test-name').textContent = TEST_LABEL;
+document.getElementById('sb-test-name').textContent = TEST_LABEL;
+document.getElementById('sheet-test-name').textContent = TEST_LABEL;
+
+/* ============================================================
+   ⚠️ KHÓA NỘI DUNG NOTICE / CẢNH BÁO — KHÔNG ĐƯỢC SỬA, KHÔNG ĐƯỢC
+   VIẾT LẠI, KHÔNG ĐƯỢC DIỄN GIẢI LẠI BẰNG AI KHI MERGE DATA.
+   ------------------------------------------------------------
+   AI STUDIO / BẤT KỲ CÔNG CỤ MERGE NÀO: đây là các đoạn văn bản
+   pháp lý/vận hành cố định của G.EDU (cảnh báo nộp bài, lưu ý
+   chụp Answer Sheet, banner review mode...). TUYỆT ĐỐI không
+   được tự ý đổi câu chữ, rút gọn, dịch lại, hay "cải thiện văn
+   phong" các giá trị bên dưới khi xử lý/merge nội dung đề thi.
+   Nếu cần thay đổi nội dung đề thi, chỉ được sửa các biến ở mục
+   "0. CONFIG", "1. PASSAGES & QUESTIONS DATA" và "2. ĐÁP ÁN ĐÚNG"
+   phía trên — KHÔNG đụng vào khối LOCKED_NOTICES này.
+
+   Cơ chế bảo vệ: toàn bộ text bên dưới được JS bơm vào DOM lúc
+   khởi động (không hard-code sẵn trong HTML) + có hàm
+   verifyLockedNotices() kiểm tra lại sau khi DOM sẵn sàng, nếu
+   phát hiện bị ghi đè sai lệch sẽ tự động phục hồi đúng bản gốc.
+   ============================================================ */
+const LOCKED_NOTICES = Object.freeze({
+  'login-note': 'Vui lòng nhập Họ tên và Lớp bằng <b>CHỮ IN HOA</b>. Thông tin chính xác sẽ giúp hệ thống ghi nhận và khôi phục bài làm nếu bạn thoát hoặc tải lại trang.',
+  'review-banner-text': '📖 Đang xem lại bài làm — <b>chế độ chỉ xem, không thể chỉnh sửa</b>',
+  'sheet-warn': '📸 Vui lòng chụp lại Answer Sheet để lưu bài làm — phòng trường hợp thoát trang hoặc đổi thiết bị làm mất kết quả.',
+  'submit-modal-title': 'Xác nhận nộp bài?',
+  'submit-modal-prefix': 'Bạn đã trả lời',
+  'submit-modal-suffix': '/40 câu.',
+  'submit-modal-footer': 'Sau khi nộp, bạn sẽ không thể chỉnh sửa đáp án.',
+  'flagpanel-empty': 'Chưa có câu nào được đánh dấu.'
+});
+
+function applyLockedNotices(){
+  document.querySelectorAll('[data-locked-id]').forEach(el=>{
+    const key = el.getAttribute('data-locked-id');
+    if(LOCKED_NOTICES.hasOwnProperty(key)){
+      el.innerHTML = LOCKED_NOTICES[key];
+    }
+  });
+}
+
+/* Tự kiểm tra & tự chữa lành: chạy lại sau khi toàn bộ app khởi tạo,
+   phòng trường hợp công cụ merge bên ngoài (AI Studio) đã ghi đè
+   trực tiếp innerHTML của các phần tử data-locked-id bằng nội dung
+   khác trước khi/khi nạp trang. */
+let _isFixingLockedNotices = false;
+function verifyLockedNotices(){
+  if(_isFixingLockedNotices) return; // tránh vòng lặp với MutationObserver
+  let fixedCount = 0;
+  document.querySelectorAll('[data-locked-id]').forEach(el=>{
+    const key = el.getAttribute('data-locked-id');
+    const expected = LOCKED_NOTICES[key];
+    if(expected !== undefined && el.innerHTML.trim() !== expected.trim()){
+      _isFixingLockedNotices = true;
+      el.innerHTML = expected;
+      _isFixingLockedNotices = false;
+      fixedCount++;
+    }
+  });
+  if(fixedCount > 0){
+    console.warn('[G.EDU LOCK] Phát hiện ' + fixedCount + ' đoạn notice bị thay đổi sai lệch — đã tự động khôi phục về bản gốc.');
+  }
+}
+
+applyLockedNotices();
+verifyLockedNotices();
+/* Lớp bảo vệ bổ sung: theo dõi DOM thời gian thực, nếu bất kỳ phần tử
+   data-locked-id nào bị thay đổi nội dung sau khi trang đã chạy (vd do
+   script merge bên ngoài chèn lại) thì tự động phục hồi ngay lập tức. */
+const lockedNoticeObserver = new MutationObserver(()=> verifyLockedNotices());
+document.querySelectorAll('[data-locked-id]').forEach(el=>{
+  lockedNoticeObserver.observe(el, { childList:true, characterData:true, subtree:true });
+});
+
+/* ---------- 1. PASSAGES & QUESTIONS DATA — TODO[AI STUDIO] ----------
+   Khai báo toàn bộ nội dung đề tại đây. Cấu trúc mẫu bên dưới.
+   QUESTION_DEFS: mảng mô tả từng câu hỏi để hệ thống tự sinh
+   qmap, sheet, flag, validate — không cần viết tay HTML câu hỏi
+   trong panel-questions (nhưng nếu AI Studio muốn viết tay HTML
+   trực tiếp thay vì dùng renderer, vẫn được — chỉ cần đảm bảo
+   mỗi qitem có id="anchor-{n}", input có atribute data-q="{n}",
+   và nút flag có class qflag-btn data-q="{n}").
+
+   type hỗ trợ: 'text' (fill-in/short answer), 'select' (dropdown,
+   dùng cho matching/letter bank), 'radio' (MCQ chọn 1),
+   'checkbox-pair' (MCQ chọn 2, vd Q19-20 dùng chung 1 group key)
+
+   PASSAGES: mảng 3 phần tử {title, meta, html} cho 3 tab.
+------------------------------------------------------------- */
+const PASSAGES = [
+  {
+    "title": "Traditional Farming in Zambia's Luapula Province",
+    "meta": "Passage 1",
+    "html": "<p>By tradition, land in Luapula Province is not owned by individuals but, as in many other parts of Africa, is allocated by the headman or headwoman of a village to people of either sex according to need. Since land is generally prepared by hand, a single family group cannot take on a very large area, so land has not been a limiting resource over large parts of the province. However, that situation has already changed near the main towns, and there has long been a scarcity of land for cultivation in the river valley. In both these areas, registered ownership patterns are becoming prevalent.</p><p>Most of the traditional cropping in Luapula Province is based on citemene, a system whereby crops are grown on the ashes of tree branches. As a rule, entire trees are pollarded (pollarding: removing the tops of tree branches) rather than felled, so that they can regenerate. Branches are cut over an area of land of varying size early in the dry season and then stacked to dry out. The wood is fired before the onset of the rains, and in the first year, the area is planted with the African cereal called finger millet. The grain of this crop is used to brew local drinks such as cipumu, which contributes several vitamins of the B complex to people's diets. Cipumu is also used in cementing reciprocal working relationships (Pottier 1985).</p><p>During the second year, and possibly for a few years more, the area is planted with various combinations of annuals such as maize, pumpkins, sweet potatoes, groundnuts, beans, and various leafy vegetables, grown with a certain amount of rotation. The diverse sequence ends with the vegetable cassava, which is often planted next to the last but one crop before this is harvested.</p><p>Richards (1969) observed that the practice of cilemene entails a definite division of labour; men and women perform different tasks. The men stake out plots in an unobtrusive manner, since it is considered provocative towards one's neighbours to mark boundaries in an explicit way. The dangerous work of felling branches is also the men's province: Branches are then stacked by women and fired by men. Women and men cooperate in the planting work, but the harvesting is always done by women.</p><p>At the beginning of the citemene cycle, little weeding is necessary, since the firing of the branches effectively destroys weeds, but as the cycle progresses, weeds increase, and nutrients eventually become depleted to a point where further effort with annual crops is not worthwhile. At this point, cassava is planted, since it can produce a crop on soil that is almost exhausted. Thereafter, the plot is abandoned, and a new area is pollarded for the next cycle.</p><p>When forest is not available, a situation which is increasingly the case nowadays, a series of ridges is built, in which combinations of maize, beans, groundnuts, and sweet potatoes are then planted, usually followed by cassava. These plots are normally tended by women and provide subsistence.</p><p>Where their roots have year-round access to water, mango, guava, and oil-palm trees are often grown around houses, forming a traditional agro-forestry system, and some of the fruit from these is sold by the roadside or in local markets. In addition, local varieties of rice are sometimes planted in waterlogged ground during the rainy season.</p><p>Fishing has always been a far more remunerative activity in Luapula than crop husbandry. It provides a much-needed protein supplement to the diet, as well as being the one substantial source of cash. Mueh fish is dried for sale to areas away from the main waterways. The Mweru and Bangweulu Lake Basins are the main areas of Year-round fishing, but the Luapula River is also exploited during the latter part of the dry season. Several previously abundant and desirable species have all but disappeared from Lake Mweru, apparently due to overfishing (Huckaby 1979).</p><p>Regarding animal husbandry, only small numbers of cattle or oxen are kept in the province owing to the prevalence of the tsetse fly. The resulting absence of animal power for pulling machinery greatly limits people's ability to plough and cultivate land: a married couple can rarely manage to prepare an area of more than half a hectare by hand-hoeing. However, most people keep freely roaming chickens and goats. These act as a reserve for bartering, but may also be occasionally slaughtered for ceremonies or for entertaining important visitors. These animals are not a standard part of most people's diet.</p><p>Until recently, citemene has been an ingenious system for providing seasonal, high-quality cereals and vegetables in regions of acidic, heavily leached soils. Nutritionally, the most serious deficiency has been that of protein. However, this could be alleviated when fish were available, provided that cultivators lived near the valley or could find a source of dried fish. The citemene/fishing system was well adapted to the ecology of the woodland regions and sustainable for long periods, but only as long as human population densities stayed at low levels.</p><p>Although population densities are still much lower today than in many other parts of the world, neither the fisheries nor the woodlands of Luapula are capable, with unmodified traditional practices, of supporting the expanding population in a sustainable manner. For instance, even in a normal season, diets suffer from a lack of energy, protein, vitamins, and minerals. It will therefore be necessary in the future to intensify and diversify productive systems.</p>"
+  },
+  {
+    "title": "Babies cry in their mother tongue",
+    "meta": "Passage 2",
+    "html": "<p>A newborn baby's cry may sound the same to the ears of sleep-deprived parents the world over but, say scientists, comparisons of babies a few days old show that the cry of a newborn shares similarities with the language its parents speak. The reason for this is presumably the different intonation patterns in their native languages, which are already perceived in the uterus and are later reproduced.</p><p>A It is already known that human foetuses become attentive listeners in the final trimester of pregnancy. 'The mother's voice in particular is sensed early on,' explains Professor Amelia Finlayson of the Institute for Human Cognitive and Brain Sciences in Leipzig. 'Human foetuses perceive information filtered at around 400 hertz, but they cannot hear the actual words. It is a bit like holding your head under water when someone is talking next to the bath.'</p><p>B Finlayson's research indicates that newborn babies probably cannot distinguish between the accents of Welsh and Northern Scottish people or between Low German and Upper Bavarian, but they can recognise major differences in the intonation patterns of their respective mother tongues. The Leipzig researchers showed that in an earlier experiment, by means of physiological studies of babies of three to four months of age. For that study, the babies had hoods with electrodes put on their heads, and had recordings of different intonation patterns played to them. The children's brainwaves reacted to the differences even when they were asleep.</p><p>C At the same time, Doctor Katya Williams of the University of Wurzburg first suggested in her PhD thesis that babies' crying might be a stage in their linguistic development. Said Williams: 'It used to be thought that a baby's cry was just a signal of alarm to call its mother. This assumption was corrected when we noticed that the cries are not the same from week to week. What biological purpose would that have? If a fire siren sounded different every day, we would not even recognise it!'</p><p>D The question thus presented itself as to whether babies' cries already showed the intonation patterns of their different mother tongues. To study this, the Leipzig brain researchers and the 'screaming researchers' of the University of Wurzburg worked in collaboration with their colleagues at the Laboratory of Cognitive Sciences and Linguistics, at the Ecole Normale Superieure in Paris, to devise a new experiment. German and French babies were selected for the comparison because the differences in the intonation shapes of these two mother tongues are particularly pronounced. For example, the German word Papa is Papa in French.</p><p>E These three research groups made a comparison of recordings of 60 healthy newborns aged between two and five days old: 30 infants born into French-speaking families and 30 born into German-speaking families. Whenever the babies were hungry or thirsty or simply wanted their mothers and announced the fact by crying, the researchers were at the ready with their microphones and recorded their complaints. More than 20 hours of recordings of babies' crying were then fed into a computer for the purpose of analysis.</p><p>F The amazing result, published in the journal Modern Biology, is that just a few days after birth, babies use the acoustic input they perceive in the uterus to adapt their linguistic production to their target mother tongue. The melody of the German babies' screams usually began loudly and at a high pitch and then followed a downward curve, while the French babies more often screamed with a rising melody contour. Thus, they reproduce precisely the intonation patterns that are characteristic of their respective mother tongues. This proves, says the team of researchers, that babies' cries are attempts to communicate specifically with their mothers. 'Newborns are probably highly motivated to imitate their mother's behaviour in order to attract her and foster bonding and therefore physical nourishment,' they wrote. 'Because melody contour may be the only aspect of their mother's speech that newborns are able to imitate, this might explain why we found melody contour imitation at that early age.' This finding is interesting because it suggests that babies are producing sounds they have heard in the womb, meaning that this is learning rather than an innate behaviour.</p><p>G Furthermore, the findings are consistent with the hypothesis that linguistic development does not just begin from the age of nine to ten months, with the first babbling resembling language such as 'mam- mam-mam' or 'ba-ba-ba', but with the very first sounds that babies produce. 'We are born to learn language. And that starts right away,' says Dr Katya Williams. Dr Williams' colleague, Mr Walter Meade, discovered that this initial sensitivity to the melodic features of language assists infants to subsequently learn their mother tongue. 'The melodic patterns practised in crying are building blocks for eventual sound production, such as gurgling and babbling, right up to the first words and sentences,' says Meade.</p><p>H The results also demonstrated once again how language distinguishes human infants from all other primates. According to Williams, among baby chimpanzees, the 'crying melody' is closely associated with the build-up and reduction of pressure in the lungs, and is not generated by a mental process. 'In comparison with the sounds of other primates, the cries of a newborn human baby display a fantastic repertoire of melodic and rhythmic variations,' she adds. 'Our babies are expert vocalists in comparison with all the other animals. Could that offer some small consolation for nerve-wracked parents?'</p>"
+  },
+  {
+    "title": "Ancient Rome: archaeologists are trying to understand more about the early history of the city",
+    "meta": "Passage 3",
+    "html": "<p>From ancient times to the present, historians have asked the question: How and why did an ordinary little town in central Italy grow so much bigger than any other in the ancient Mediterranean and come to control such a huge empire?' During the first century BCE, Roman writers themselves began systematically to study the earlier centuries of their city and their empire. Yet these historians had little more direct evidence of the earliest phases of Rome's history than modern writers have, and in some ways perhaps not as much, as there were no surviving documents or archives. Their 'histories' about the foundation of ancient Rome tell us a good deal about how the Romans saw their city, their values, and their failings. However, they tell us very little indeed about what they claim to inform us about: that is, what earliest Rome was actually like. One fact is obvious. Rome was already a very old city by 63 BCE, the birth date of its first emperor. But how exactly are we to access reliable information about the origins of Rome?</p><p>One way of doing this is by turning away from the histories of Roman writers and seeking out clues in the Latin language, or in later Roman institutions that might point back to features of earliest Rome. Much more tangible, however, is the evidence of archaeology. Dig down deep in the city of Rome, below the visible ancient monuments, and a few traces of a much earlier settlement or settlements remain. Beneath the Forum itself (an ancient marketplace at the centre of the city) lie the remains of an early cemetery, which caused tremendous excitement when they were first unearthed at the start of the 20th century. Cemeteries imply the existence of a community, and traces of that are presumably to be found in the groups of huts whose faint outlines have been detected under various parts of the later city, including on the Palatine (the centremost of the seven hills on which Rome is built). We have little idea of the nature of these huts beyond their construction in wood, clay, and thatch, and still less of the lifestyle they supported. But we can fill in some of the gaps if we look just outside Rome. One of the best preserved and most carefully excavated of these early structures was found at Fidenae, a few miles north of the city, in the 1980s. It is a rectangular building, some six by five metres, made of wood and rammed earth - a construction method still utilised up to the present day - with a simple porch around it, formed by the overhanging roof. Inside was a central hearth, some large pottery storage jars, and traces of predictable foodstuffs and domestic animals.</p><p>There are vivid glimpses of human and other life here; the question is, what do those glimpses add up to? The archaeological remains certainly demonstrate that there is a long and rich prehistory behind the ancient Rome we can still see, but quite how long that prehistory is is another matter.</p><p>Part of the problem is the conditions of excavation in the city itself. The site of Rome has been so intensively built on for centuries that we find these traces of early occupation only in spots that happen not to have been disturbed. The foundations dug in the first and second centuries CE for the vast marble temples of the forum obliterated much of what then lay beneath the surface; the cellars of grand Renaissance houses cut through even more ancient remains in other parts of the city. So we have tiny snapshots, never the big picture. This is archaeology at its most difficult, and - although new fragments of evidence emerge all the time - its interpretation, and reinterpretation is almost always contested and often controversial. For example, there is an ongoing debate about whether the small pieces of wattle and daub found in excavations in the Forum in the mid-20th century indicate that there was an early hut settlement there too, or whether they were inadvertently introduced as part of the rubble used a few centuries later to provide a new raised surface for the area. It has to be said that this place, though fine for a cemetery, would have been rather damp and marshy for a village.</p><p>Precise dating is even more contentious. It cannot be stressed enough that there is no certain independent date for any of the archaeological material from earliest Rome or the area around, and that arguments still rage about the age of almost every major find. It has taken decades of work over the past century or so - using such diagnostics as the existence of wheel-made pottery (assumed to be later than handmade), the occasional presence on graves of Greek ceramics (whose dating is better, but still not perfectly understood) and careful comparison from site to site - to produce a rough chronological scheme covering the period from around 1000 to 600 BCE.</p><p>On that basis, the earliest burials in Rome would have been around 1000 BCE, and the earliest known settlements around 750-700 BCE. But even these dates are far from certain. Recent scientific methods - including radiocarbon dating, which calculates the age of any organic material - have suggested that they are all too 'young', by as much as a hundred years. The building at Fidenae, for example, was dated around the middle of the eighth century BCE according to traditional archaeological criteria, but that is pushed back to around the end of the ninth century BCE if we follow radiocarbon analysis. If anything, Rome appears to be getting older.</p>"
+  }
+];
+
+/* Mỗi nhóm câu hỏi gắn với 1 passage (passageIndex 0/1/2) và có
+   instructionsHtml hiển thị phía trên nhóm. */
+const QUESTION_GROUPS = [
+  {
+    "passageIndex": 0,
+    "instructionsHtml": "<b>Questions 1–5</b><br>Complete the sentences below.<br>Write <b>NO MORE THAN THREE WORDS</b> from the passage for each answer.",
+    "questions": [
+      {
+        "n": 1,
+        "type": "text",
+        "text": "In Luapula Province, land has traditionally been given to people on the basis of __________."
+      },
+      {
+        "n": 2,
+        "type": "text",
+        "text": "The citemene system involves planting crops in the __________ of wood."
+      },
+      {
+        "n": 3,
+        "type": "text",
+        "text": "In the citemene system __________ is the last crop to be planted."
+      },
+      {
+        "n": 4,
+        "type": "text",
+        "text": "In areas without trees, crops are planted in a __________."
+      },
+      {
+        "n": 5,
+        "type": "text",
+        "text": "If conditions are right, fruit trees may be planted near __________."
+      }
+    ]
+  },
+  {
+    "passageIndex": 0,
+    "instructionsHtml": "<b>Questions 6–9</b><br>Look at the following statements (Questions 6–9) and the list of animals below.<br>Match each statement with the correct animal, <b>A, B or C</b>.<br>Choose the correct letter, <b>A, B or C</b>.<br><br><b>List of Animals</b><br>A. fish<br>B. goats<br>C. oxen",
+    "questions": [
+      {
+        "n": 6,
+        "type": "select",
+        "text": "They yield the biggest profits for farmers.",
+        "options": [
+          {
+            "key": "A",
+            "label": "fish"
+          },
+          {
+            "key": "B",
+            "label": "goats"
+          },
+          {
+            "key": "C",
+            "label": "oxen"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "type": "select",
+        "text": "They may be consumed on special occasions.",
+        "options": [
+          {
+            "key": "A",
+            "label": "fish"
+          },
+          {
+            "key": "B",
+            "label": "goats"
+          },
+          {
+            "key": "C",
+            "label": "oxen"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "type": "select",
+        "text": "Because of insect pests they do not thrive.",
+        "options": [
+          {
+            "key": "A",
+            "label": "fish"
+          },
+          {
+            "key": "B",
+            "label": "goats"
+          },
+          {
+            "key": "C",
+            "label": "oxen"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "type": "select",
+        "text": "They are often preserved and sold outside the local area.",
+        "options": [
+          {
+            "key": "A",
+            "label": "fish"
+          },
+          {
+            "key": "B",
+            "label": "goats"
+          },
+          {
+            "key": "C",
+            "label": "oxen"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "passageIndex": 0,
+    "instructionsHtml": "<b>Questions 10–12</b><br>Choose <b>TRUE</b> if the statement agrees with the information given in the text, choose <b>FALSE</b> if the statement contradicts the information, or choose <b>NOT GIVEN</b> if there is no information on this.",
+    "questions": [
+      {
+        "n": 10,
+        "type": "radio",
+        "text": "Agricultural land is usually prepared without the help of oxen.",
+        "options": [
+          {
+            "key": "TRUE",
+            "label": "TRUE"
+          },
+          {
+            "key": "FALSE",
+            "label": "FALSE"
+          },
+          {
+            "key": "NOT GIVEN",
+            "label": "NOT GIVEN"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "type": "radio",
+        "text": "Children are a source of extra labour during busy periods.",
+        "options": [
+          {
+            "key": "TRUE",
+            "label": "TRUE"
+          },
+          {
+            "key": "FALSE",
+            "label": "FALSE"
+          },
+          {
+            "key": "NOT GIVEN",
+            "label": "NOT GIVEN"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "type": "radio",
+        "text": "The people of Luapula Province eat chicken on a regular basis.",
+        "options": [
+          {
+            "key": "TRUE",
+            "label": "TRUE"
+          },
+          {
+            "key": "FALSE",
+            "label": "FALSE"
+          },
+          {
+            "key": "NOT GIVEN",
+            "label": "NOT GIVEN"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "passageIndex": 0,
+    "instructionsHtml": "<b>Question 13</b><br>Choose the correct answer.",
+    "questions": [
+      {
+        "n": 13,
+        "type": "radio",
+        "text": "What is the writer's opinion about traditional farming methods in Luapula Province?",
+        "options": [
+          {
+            "key": "A",
+            "label": "They meet all the dietary needs of the local population."
+          },
+          {
+            "key": "B",
+            "label": "The region's natural resources have not been fully exploited."
+          },
+          {
+            "key": "C",
+            "label": "They will be inadequate to support a growing population."
+          },
+          {
+            "key": "D",
+            "label": "A larger labour force will be required for maximum efficiency."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "passageIndex": 1,
+    "instructionsHtml": "<b>Questions 14–19</b><br>Reading Passage 2 has eight paragraphs, A–H.<br>Which paragraph contains the following information?<br>Choose the correct letter, <b>A–H</b>.",
+    "questions": [
+      {
+        "n": 14,
+        "type": "select",
+        "text": "a description of the methodology of an experiment carried out by several research institutes",
+        "options": [
+          {
+            "key": "A",
+            "label": "A"
+          },
+          {
+            "key": "B",
+            "label": "B"
+          },
+          {
+            "key": "C",
+            "label": "C"
+          },
+          {
+            "key": "D",
+            "label": "D"
+          },
+          {
+            "key": "E",
+            "label": "E"
+          },
+          {
+            "key": "F",
+            "label": "F"
+          },
+          {
+            "key": "G",
+            "label": "G"
+          },
+          {
+            "key": "H",
+            "label": "H"
+          }
+        ]
+      },
+      {
+        "n": 15,
+        "type": "select",
+        "text": "the rationale for choosing the participants of an experiment",
+        "options": [
+          {
+            "key": "A",
+            "label": "A"
+          },
+          {
+            "key": "B",
+            "label": "B"
+          },
+          {
+            "key": "C",
+            "label": "C"
+          },
+          {
+            "key": "D",
+            "label": "D"
+          },
+          {
+            "key": "E",
+            "label": "E"
+          },
+          {
+            "key": "F",
+            "label": "F"
+          },
+          {
+            "key": "G",
+            "label": "G"
+          },
+          {
+            "key": "H",
+            "label": "H"
+          }
+        ]
+      },
+      {
+        "n": 16,
+        "type": "select",
+        "text": "a suggestion that babies are driven to copy their mothers to gain food",
+        "options": [
+          {
+            "key": "A",
+            "label": "A"
+          },
+          {
+            "key": "B",
+            "label": "B"
+          },
+          {
+            "key": "C",
+            "label": "C"
+          },
+          {
+            "key": "D",
+            "label": "D"
+          },
+          {
+            "key": "E",
+            "label": "E"
+          },
+          {
+            "key": "F",
+            "label": "F"
+          },
+          {
+            "key": "G",
+            "label": "G"
+          },
+          {
+            "key": "H",
+            "label": "H"
+          }
+        ]
+      },
+      {
+        "n": 17,
+        "type": "select",
+        "text": "an account of the methodology of a past experiment carried out by the Leipzig researchers",
+        "options": [
+          {
+            "key": "A",
+            "label": "A"
+          },
+          {
+            "key": "B",
+            "label": "B"
+          },
+          {
+            "key": "C",
+            "label": "C"
+          },
+          {
+            "key": "D",
+            "label": "D"
+          },
+          {
+            "key": "E",
+            "label": "E"
+          },
+          {
+            "key": "F",
+            "label": "F"
+          },
+          {
+            "key": "G",
+            "label": "G"
+          },
+          {
+            "key": "H",
+            "label": "H"
+          }
+        ]
+      },
+      {
+        "n": 18,
+        "type": "select",
+        "text": "an illustration of the limitation of babies' ability to hear inside the womb",
+        "options": [
+          {
+            "key": "A",
+            "label": "A"
+          },
+          {
+            "key": "B",
+            "label": "B"
+          },
+          {
+            "key": "C",
+            "label": "C"
+          },
+          {
+            "key": "D",
+            "label": "D"
+          },
+          {
+            "key": "E",
+            "label": "E"
+          },
+          {
+            "key": "F",
+            "label": "F"
+          },
+          {
+            "key": "G",
+            "label": "G"
+          },
+          {
+            "key": "H",
+            "label": "H"
+          }
+        ]
+      },
+      {
+        "n": 19,
+        "type": "select",
+        "text": "an assertion that babies of different nationalities cry with different intonation",
+        "options": [
+          {
+            "key": "A",
+            "label": "A"
+          },
+          {
+            "key": "B",
+            "label": "B"
+          },
+          {
+            "key": "C",
+            "label": "C"
+          },
+          {
+            "key": "D",
+            "label": "D"
+          },
+          {
+            "key": "E",
+            "label": "E"
+          },
+          {
+            "key": "F",
+            "label": "F"
+          },
+          {
+            "key": "G",
+            "label": "G"
+          },
+          {
+            "key": "H",
+            "label": "H"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "passageIndex": 1,
+    "instructionsHtml": "<b>Questions 20–23</b><br>Look at the following statements (Questions 20–23) and the list of researchers below.<br>Match each statement with the correct researcher, <b>A, B, or C</b>.<br><br><b>List of researchers</b><br>A. Professor Amelia Finlayson<br>B. Doctor Katya Williams<br>C. Mr Walter Meade",
+    "questions": [
+      {
+        "n": 20,
+        "type": "select",
+        "text": "Important everyday sounds must remain consistent in order to be understood.",
+        "options": [
+          {
+            "key": "A",
+            "label": "Professor Amelia Finlayson"
+          },
+          {
+            "key": "B",
+            "label": "Doctor Katya Williams"
+          },
+          {
+            "key": "C",
+            "label": "Mr Walter Meade"
+          }
+        ]
+      },
+      {
+        "n": 21,
+        "type": "select",
+        "text": "The different tones used in crying help babies to learn language later on.",
+        "options": [
+          {
+            "key": "A",
+            "label": "Professor Amelia Finlayson"
+          },
+          {
+            "key": "B",
+            "label": "Doctor Katya Williams"
+          },
+          {
+            "key": "C",
+            "label": "Mr Walter Meade"
+          }
+        ]
+      },
+      {
+        "n": 22,
+        "type": "select",
+        "text": "The tune of young primates’ cries is created by their breathing, not their brain.",
+        "options": [
+          {
+            "key": "A",
+            "label": "Professor Amelia Finlayson"
+          },
+          {
+            "key": "B",
+            "label": "Doctor Katya Williams"
+          },
+          {
+            "key": "C",
+            "label": "Mr Walter Meade"
+          }
+        ]
+      },
+      {
+        "n": 23,
+        "type": "select",
+        "text": "Unborn babies in the womb are focused on the voice of one specific person.",
+        "options": [
+          {
+            "key": "A",
+            "label": "Professor Amelia Finlayson"
+          },
+          {
+            "key": "B",
+            "label": "Doctor Katya Williams"
+          },
+          {
+            "key": "C",
+            "label": "Mr Walter Meade"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "passageIndex": 1,
+    "instructionsHtml": "<b>Questions 24–26</b><br>Complete the sentences below.<br>Write <b>ONE WORD ONLY</b> from the passage for each answer.",
+    "questions": [
+      {
+        "n": 24,
+        "type": "text",
+        "text": "Professor Amelia Finlayson doubts unborn babies can recognise different __________."
+      },
+      {
+        "n": 25,
+        "type": "text",
+        "text": "In the first Leipzig experiment, the __________ of babies changed upon hearing different intonation patterns."
+      },
+      {
+        "n": 26,
+        "type": "text",
+        "text": "Early scientists believed that babies cried for no other reason than as a __________ that they wanted their parents."
+      }
+    ]
+  },
+  {
+    "passageIndex": 2,
+    "instructionsHtml": "<b>Questions 27–32</b><br>Choose <b>YES</b> if the statement agrees with the claims of the writer, choose <b>NO</b> if the statement contradicts the claims of the writer, or choose <b>NOT GIVEN</b> if it is impossible to say what the writer thinks about this.",
+    "questions": [
+      {
+        "n": 27,
+        "type": "radio",
+        "text": "Historians have expressed little curiosity about the rise of the Roman Empire.",
+        "options": [
+          {
+            "key": "YES",
+            "label": "YES"
+          },
+          {
+            "key": "NO",
+            "label": "NO"
+          },
+          {
+            "key": "NOT GIVEN",
+            "label": "NOT GIVEN"
+          }
+        ]
+      },
+      {
+        "n": 28,
+        "type": "radio",
+        "text": "Accounts from the first century BCE of Rome's origins may be less reliable than 21st-century accounts.",
+        "options": [
+          {
+            "key": "YES",
+            "label": "YES"
+          },
+          {
+            "key": "NO",
+            "label": "NO"
+          },
+          {
+            "key": "NOT GIVEN",
+            "label": "NOT GIVEN"
+          }
+        ]
+      },
+      {
+        "n": 29,
+        "type": "radio",
+        "text": "Most Roman historians viewed their ancient capital in an unrealistically positive light.",
+        "options": [
+          {
+            "key": "YES",
+            "label": "YES"
+          },
+          {
+            "key": "NO",
+            "label": "NO"
+          },
+          {
+            "key": "NOT GIVEN",
+            "label": "NOT GIVEN"
+          }
+        ]
+      },
+      {
+        "n": 30,
+        "type": "radio",
+        "text": "The accounts by early Roman historians about the founding of Rome provide a full description of life at that time.",
+        "options": [
+          {
+            "key": "YES",
+            "label": "YES"
+          },
+          {
+            "key": "NO",
+            "label": "NO"
+          },
+          {
+            "key": "NOT GIVEN",
+            "label": "NOT GIVEN"
+          }
+        ]
+      },
+      {
+        "n": 31,
+        "type": "radio",
+        "text": "It is certain that the city of Rome was in existence long before 63 BCE.",
+        "options": [
+          {
+            "key": "YES",
+            "label": "YES"
+          },
+          {
+            "key": "NO",
+            "label": "NO"
+          },
+          {
+            "key": "NOT GIVEN",
+            "label": "NOT GIVEN"
+          }
+        ]
+      },
+      {
+        "n": 32,
+        "type": "radio",
+        "text": "Some people oppose archaeological excavations in Rome because they can damage the ancient monuments.",
+        "options": [
+          {
+            "key": "YES",
+            "label": "YES"
+          },
+          {
+            "key": "NO",
+            "label": "NO"
+          },
+          {
+            "key": "NOT GIVEN",
+            "label": "NOT GIVEN"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "passageIndex": 2,
+    "instructionsHtml": "<b>Questions 33–36</b><br>Choose the correct answer.",
+    "questions": [
+      {
+        "n": 33,
+        "type": "radio",
+        "text": "According to the writer, why were the archaeological remains found at Fidenae important?",
+        "options": [
+          {
+            "key": "A",
+            "label": "They shed some light on the way of life of ancient Romans."
+          },
+          {
+            "key": "B",
+            "label": "They were the first evidence of an ancient Roman settlement in the area."
+          },
+          {
+            "key": "C",
+            "label": "They overturned common assumptions about the diet of ancient Romans."
+          },
+          {
+            "key": "D",
+            "label": "They showed how sophisticated domestic Roman architecture could be."
+          }
+        ]
+      },
+      {
+        "n": 34,
+        "type": "radio",
+        "text": "What did Rome's marble temples and Renaissance houses have in common?",
+        "options": [
+          {
+            "key": "A",
+            "label": "They were the most enduring buildings of their respective eras."
+          },
+          {
+            "key": "B",
+            "label": "They were evidence of Rome's enormous wealth."
+          },
+          {
+            "key": "C",
+            "label": "They were built on previously unoccupied sites."
+          },
+          {
+            "key": "D",
+            "label": "Their construction destroyed evidence of earlier buildings."
+          }
+        ]
+      },
+      {
+        "n": 35,
+        "type": "radio",
+        "text": "What does the writer say in the fifth paragraph about the dating of excavated remains?",
+        "options": [
+          {
+            "key": "A",
+            "label": "Only the age of a proportion of remains can be agreed upon."
+          },
+          {
+            "key": "B",
+            "label": "Only an approximate sequence of eras can be established."
+          },
+          {
+            "key": "C",
+            "label": "Serious attempts at dating began only a few decades ago."
+          },
+          {
+            "key": "D",
+            "label": "More thorough investigations will result in reliable dates."
+          }
+        ]
+      },
+      {
+        "n": 36,
+        "type": "radio",
+        "text": "In the final paragraph, the writer makes the point that",
+        "options": [
+          {
+            "key": "A",
+            "label": "traditional archaeological methods of dating have been discredited."
+          },
+          {
+            "key": "B",
+            "label": "many archaeologists are reluctant to abandon traditional methods of dating."
+          },
+          {
+            "key": "C",
+            "label": "radiocarbon dating is more accurate than archaeological methods."
+          },
+          {
+            "key": "D",
+            "label": "the findings of traditional archaeology and radiocarbon dating differ."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "passageIndex": 2,
+    "instructionsHtml": "<b>Questions 37–40</b><br>Complete each sentence with the correct ending, <b>A–F</b>, below.<br><br>A. composed of organic materials which are in use in the 21st century.<br>B. referred to in popular legends about the origins of Rome.<br>C. constructed on the site of an earlier burial ground.<br>D. used to determine the relative dates of various Roman artefacts.<br>E. chosen as the area for the greatest number of archaeological excavations.<br>F. expected to shed some light on what Rome was originally like.",
+    "questions": [
+      {
+        "n": 37,
+        "type": "select",
+        "text": "The Latin language can be __________.",
+        "options": [
+          {
+            "key": "A",
+            "label": "composed of organic materials which are in use in the 21st century."
+          },
+          {
+            "key": "B",
+            "label": "referred to in popular legends about the origins of Rome."
+          },
+          {
+            "key": "C",
+            "label": "constructed on the site of an earlier burial ground."
+          },
+          {
+            "key": "D",
+            "label": "used to determine the relative dates of various Roman artefacts."
+          },
+          {
+            "key": "E",
+            "label": "chosen as the area for the greatest number of archaeological excavations."
+          },
+          {
+            "key": "F",
+            "label": "expected to shed some light on what Rome was originally like."
+          }
+        ]
+      },
+      {
+        "n": 38,
+        "type": "select",
+        "text": "The Roman Forum was __________.",
+        "options": [
+          {
+            "key": "A",
+            "label": "composed of organic materials which are in use in the 21st century."
+          },
+          {
+            "key": "B",
+            "label": "referred to in popular legends about the origins of Rome."
+          },
+          {
+            "key": "C",
+            "label": "constructed on the site of an earlier burial ground."
+          },
+          {
+            "key": "D",
+            "label": "used to determine the relative dates of various Roman artefacts."
+          },
+          {
+            "key": "E",
+            "label": "chosen as the area for the greatest number of archaeological excavations."
+          },
+          {
+            "key": "F",
+            "label": "expected to shed some light on what Rome was originally like."
+          }
+        ]
+      },
+      {
+        "n": 39,
+        "type": "select",
+        "text": "The recently discovered building at Fidenae was __________.",
+        "options": [
+          {
+            "key": "A",
+            "label": "composed of organic materials which are in use in the 21st century."
+          },
+          {
+            "key": "B",
+            "label": "referred to in popular legends about the origins of Rome."
+          },
+          {
+            "key": "C",
+            "label": "constructed on the site of an earlier burial ground."
+          },
+          {
+            "key": "D",
+            "label": "used to determine the relative dates of various Roman artefacts."
+          },
+          {
+            "key": "E",
+            "label": "chosen as the area for the greatest number of archaeological excavations."
+          },
+          {
+            "key": "F",
+            "label": "expected to shed some light on what Rome was originally like."
+          }
+        ]
+      },
+      {
+        "n": 40,
+        "type": "select",
+        "text": "Ancient Greek pottery is sometimes __________.",
+        "options": [
+          {
+            "key": "A",
+            "label": "composed of organic materials which are in use in the 21st century."
+          },
+          {
+            "key": "B",
+            "label": "referred to in popular legends about the origins of Rome."
+          },
+          {
+            "key": "C",
+            "label": "constructed on the site of an earlier burial ground."
+          },
+          {
+            "key": "D",
+            "label": "used to determine the relative dates of various Roman artefacts."
+          },
+          {
+            "key": "E",
+            "label": "chosen as the area for the greatest number of archaeological excavations."
+          },
+          {
+            "key": "F",
+            "label": "expected to shed some light on what Rome was originally like."
+          }
+        ]
+      }
+    ]
+  }
+];
+
+/* ---------- 2. ĐÁP ÁN ĐÚNG — TODO[AI STUDIO] ----------
+   key: số câu (string) -> đáp án đúng (string, lowercase trim sẽ
+   được so khi chấm). Với câu pair (vd 19-20): để 2 key riêng "19"
+   và "20", mỗi key là 1 trong 2 đáp án đúng của cặp đó. */
+const CORRECT_ANSWERS = {
+  "1": "need",
+  "2": "ashes",
+  "3": "vegetable cassava",
+  "4": "series of ridges",
+  "5": "houses",
+  "6": "A",
+  "7": "B",
+  "8": "C",
+  "9": "A",
+  "10": "TRUE",
+  "11": "NOT GIVEN",
+  "12": "FALSE",
+  "13": "C",
+  "14": "E",
+  "15": "D",
+  "16": "F",
+  "17": "B",
+  "18": "A",
+  "19": "F",
+  "20": "B",
+  "21": "C",
+  "22": "B",
+  "23": "A",
+  "24": "accents",
+  "25": "brainwaves",
+  "26": "signal",
+  "27": "NO",
+  "28": "YES",
+  "29": "NOT GIVEN",
+  "30": "NO",
+  "31": "YES",
+  "32": "NOT GIVEN",
+  "33": "A",
+  "34": "D",
+  "35": "B",
+  "36": "D",
+  "37": "F",
+  "38": "C",
+  "39": "A",
+  "40": "D"
+};
+
+/* ============================================================
+   3. RENDER ENGINE (dùng chung — không cần sửa)
+   ============================================================ */
+let currentTab = 0;
+let answers = {};       // { "1": "value", "19": "A", ... }
+let flags = {};         // { "1": true }
+let remainingSeconds = DURATION_MIN * 60;
+let timerInterval = null;
+let studentInfo = { name:'', class:'' };
+let isSubmitted = false;
+let isReviewMode = false;
+let lastPayload = null; // lưu payload đã nộp để khôi phục màn result/sheet khi reload
+
+function renderTabs(){
+  const bar = document.getElementById('tabs-bar');
+  bar.innerHTML = '';
+  PASSAGES.forEach((p, i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i===currentTab ? ' active' : '');
+    btn.textContent = 'Passage ' + (i+1);
+    btn.addEventListener('click', ()=> switchTab(i));
+    bar.appendChild(btn);
+  });
+}
+
+// Cache innerHTML của passage (bao gồm <mark> highlight) theo từng tab.
+// Được cập nhật mỗi lần rời tab, để khi quay lại không mất highlight.
+const passageHtmlCache = {};
+
+function switchTab(i){
+  // Lưu lại innerHTML hiện tại của passage đang xem (có cả mark) trước khi rời
+  const currentPanel = document.getElementById('panel-passage');
+  if(currentPanel && currentPanel.querySelector('.passage-body')){
+    passageHtmlCache[currentTab] = currentPanel.innerHTML;
+  }
+  currentTab = i;
+  renderTabs();
+  renderPassage();
+  renderQuestions();
+  renderQMap();
+  initCopyProtection();
+}
+
+function renderPassage(){
+  const p = PASSAGES[currentTab];
+  const panel = document.getElementById('panel-passage');
+  // Nếu đã có cache (học sinh đã từng xem và có thể đã highlight), dùng lại
+  // cache thay vì render lại từ html gốc — giữ nguyên toàn bộ <mark>
+  if(passageHtmlCache[currentTab]){
+    panel.innerHTML = passageHtmlCache[currentTab];
+  } else {
+    panel.innerHTML = `
+      <div class="passage-title">${p.title}</div>
+      <div class="passage-meta">${p.meta}</div>
+      <div class="passage-body">${p.html}</div>
+    `;
+  }
+}
+
+function renderQuestions(){
+  const panel = document.getElementById('panel-questions');
+  panel.innerHTML = '';
+  const groups = QUESTION_GROUPS.filter(g => g.passageIndex === currentTab);
+
+  groups.forEach(group=>{
+    const gEl = document.createElement('div');
+    gEl.className = 'qgroup';
+    const instr = document.createElement('div');
+    instr.className = 'qgroup-instructions';
+    instr.innerHTML = group.instructionsHtml;
+    gEl.appendChild(instr);
+
+    group.questions.forEach(q=>{
+      gEl.appendChild(renderQuestionItem(q));
+    });
+    panel.appendChild(gEl);
+  });
+}
+
+function renderQuestionItem(q){
+  const item = document.createElement('div');
+  item.className = 'qitem';
+  item.id = 'anchor-' + q.n;
+
+  const num = document.createElement('div');
+  num.className = 'qnum';
+  num.textContent = q.n;
+
+  const body = document.createElement('div');
+  body.className = 'qbody';
+
+  const textEl = document.createElement('div');
+  textEl.className = 'qtext';
+  textEl.textContent = q.n + '. ' + q.text;
+  body.appendChild(textEl);
+
+  body.appendChild(renderAnswerInput(q));
+
+  const flagBtn = document.createElement('button');
+  flagBtn.className = 'qflag-btn';
+  flagBtn.dataset.q = q.n;
+  flagBtn.textContent = '🚩';
+  flagBtn.addEventListener('click', ()=> toggleFlag(q.n));
+
+  item.appendChild(num);
+  item.appendChild(body);
+  item.appendChild(flagBtn);
+
+  refreshQItemState(item, q.n);
+  return item;
+}
+
+function renderAnswerInput(q){
+  if(q.type === 'text'){
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'ans-text';
+    inp.dataset.q = q.n;
+    inp.placeholder = 'Câu trả lời...';
+    inp.value = answers[q.n] || '';
+    inp.disabled = isReviewMode;
+    inp.addEventListener('input', ()=> setAnswer(q.n, inp.value.trim()));
+    return inp;
+  }
+  if(q.type === 'select'){
+    const sel = document.createElement('select');
+    sel.className = 'ans-select';
+    sel.dataset.q = q.n;
+    sel.disabled = isReviewMode;
+    const blank = document.createElement('option');
+    blank.value = ''; blank.textContent = '—';
+    sel.appendChild(blank);
+    (q.options||[]).forEach(o=>{
+      const opt = document.createElement('option');
+      opt.value = o.key; opt.textContent = o.key + (o.label && o.label !== o.key ? ' — '+o.label : '');
+      sel.appendChild(opt);
+    });
+    sel.value = answers[q.n] || '';
+    sel.addEventListener('change', ()=> setAnswer(q.n, sel.value));
+    return sel;
+  }
+  if(q.type === 'radio'){
+    const wrap = document.createElement('div');
+    wrap.className = 'ans-options';
+    (q.options||[]).forEach(o=>{
+      const lbl = document.createElement('label');
+      lbl.className = 'ans-opt' + (answers[q.n]===o.key ? ' checked' : '');
+      const inp = document.createElement('input');
+      inp.type = 'radio'; inp.name = 'q'+q.n; inp.value = o.key;
+      inp.checked = answers[q.n]===o.key;
+      inp.disabled = isReviewMode;
+      inp.addEventListener('change', ()=>{
+        setAnswer(q.n, o.key);
+        wrap.querySelectorAll('.ans-opt').forEach(el=>el.classList.remove('checked'));
+        lbl.classList.add('checked');
+      });
+      const span = document.createElement('span');
+      span.textContent = (o.label && o.label !== o.key) ? o.key + '. ' + o.label : o.key;
+      lbl.appendChild(inp); lbl.appendChild(span);
+      wrap.appendChild(lbl);
+    });
+    return wrap;
+  }
+  if(q.type === 'checkbox-pair'){
+    const wrap = document.createElement('div');
+    wrap.className = 'ans-options';
+    const pairKey = q.pairKey;
+    (q.options||[]).forEach(o=>{
+      const lbl = document.createElement('label');
+      const checkedNow = pairValueIncludes(pairKey, o.key);
+      lbl.className = 'ans-opt' + (checkedNow ? ' checked' : '');
+      const inp = document.createElement('input');
+      inp.type = 'checkbox'; inp.value = o.key;
+      inp.checked = checkedNow;
+      inp.disabled = isReviewMode;
+      inp.addEventListener('change', ()=> handlePairToggle(pairKey, q, wrap));
+      const span = document.createElement('span');
+      span.textContent = (o.label && o.label !== o.key) ? o.key + '. ' + o.label : o.key;
+      lbl.appendChild(inp); lbl.appendChild(span);
+      wrap.appendChild(lbl);
+    });
+    return wrap;
+  }
+  return document.createElement('div');
+}
+
+/* checkbox-pair helpers: lưu vào answers[firstNOfPair] dạng array, đồng bộ cả 2 số câu trong pairKey */
+function pairQuestionNs(pairKey){
+  return pairKey.split('-').map(s=>s.trim());
+}
+function pairValueIncludes(pairKey, key){
+  const ns = pairQuestionNs(pairKey);
+  const arr = answers[ns[0]+'-'+ns[1]] || [];
+  return arr.includes(key);
+}
+function handlePairToggle(pairKey, q, wrapEl){
+  const ns = pairQuestionNs(pairKey);
+  const storeKey = ns[0]+'-'+ns[1];
+  let arr = answers[storeKey] || [];
+  const checks = Array.from(wrapEl.querySelectorAll('input[type=checkbox]'));
+  const checked = checks.filter(c=>c.checked).map(c=>c.value);
+  if(checked.length > 2){
+    // giới hạn tối đa 2 — bỏ lựa chọn cũ nhất (lựa chọn đầu tiên trong arr không còn trong checked mới sẽ giữ, ta revert lựa chọn vừa thêm)
+    const lastChecked = checks.find(c => c.checked && !arr.includes(c.value));
+    if(lastChecked) lastChecked.checked = false;
+    arr = arr; // giữ nguyên
+  } else {
+    arr = checked;
+  }
+  answers[storeKey] = arr;
+  wrapEl.querySelectorAll('.ans-opt').forEach(el=>{
+    const cb = el.querySelector('input');
+    el.classList.toggle('checked', cb.checked);
+  });
+  // QUAN TRỌNG: mỗi câu trong cặp (vd 19 & 20) phải lưu ĐÚNG 1 đáp án
+  // riêng của nó — KHÔNG được gán chung 1 chuỗi nối "A,C" vào cả 2 câu,
+  // vì như vậy gradeAnswers() sẽ luôn chấm sai (so sánh "A,C" với đáp án
+  // đúng "A" sẽ không bao giờ khớp) và dữ liệu gửi lên Sheet cũng sai.
+  // Quy ước: arr[0] -> câu có số nhỏ hơn (ns[0]), arr[1] -> câu số lớn hơn (ns[1]).
+  // Thứ tự trong arr theo đúng thứ tự học sinh tick chọn trên UI; để đảm bảo
+  // ổn định, ta sắp xếp lại theo alphabet của key đáp án (A,B,C...) trước khi gán.
+  const sortedArr = [...arr].sort();
+  ns.forEach((n, idx)=>{
+    if(sortedArr[idx]){ answers[n] = sortedArr[idx]; }
+    else { delete answers[n]; }
+  });
+  saveProgress();
+  refreshAllQItemStates();
+  renderQMap();
+  renderSheetGrid();
+}
+
+function setAnswer(n, value){
+  if(value === '' || value == null){ delete answers[n]; }
+  else { answers[n] = value; }
+  saveProgress();
+  refreshQItemStateByN(n);
+  renderQMap();
+}
+
+function refreshQItemStateByN(n){
+  const el = document.getElementById('anchor-'+n);
+  if(el) refreshQItemState(el, n);
+}
+function refreshAllQItemStates(){
+  document.querySelectorAll('.qitem').forEach(el=>{
+    const n = el.id.replace('anchor-','');
+    refreshQItemState(el, n);
+  });
+}
+function refreshQItemState(el, n){
+  el.classList.toggle('answered', !!answers[n]);
+  el.classList.toggle('flagged', !!flags[n]);
+  const flagBtn = el.querySelector('.qflag-btn');
+  if(flagBtn) flagBtn.classList.toggle('on', !!flags[n]);
+}
+
+function toggleFlag(n){
+  flags[n] = !flags[n];
+  if(!flags[n]) delete flags[n];
+  saveProgress();
+  refreshQItemStateByN(n);
+  renderQMap();
+}
+
+/* ---------- Question Map (sidebar) ---------- */
+function renderQMap(){
+  const map = document.getElementById('qmap');
+  map.innerHTML = '';
+
+  // Chỉ hiển thị các câu thuộc passage đang xem
+  const currentGroups = QUESTION_GROUPS.filter(g => g.passageIndex === currentTab);
+  const currentNs = currentGroups.flatMap(g => g.questions.map(q => q.n));
+
+  let answeredInPassage = 0;
+  currentNs.forEach(n => {
+    const cell = document.createElement('div');
+    cell.className = 'qmap-cell';
+    cell.textContent = n;
+    if(answers[n]){ cell.classList.add('answered'); answeredInPassage++; }
+    if(flags[n]) cell.classList.add('flagged');
+    cell.addEventListener('click', ()=> goToQuestion(n));
+    map.appendChild(cell);
+  });
+
+  // Progress: câu đã làm trong passage này / tổng câu passage này
+  document.getElementById('sb-map-progress').textContent =
+    answeredInPassage + '/' + currentNs.length;
+}
+
+function goToQuestion(n){
+  const groupIdx = QUESTION_GROUPS.findIndex(g => g.questions.some(q=>q.n===n));
+  if(groupIdx === -1) return;
+  const targetTab = QUESTION_GROUPS[groupIdx].passageIndex;
+  if(targetTab !== currentTab) switchTab(targetTab);
+  setTimeout(()=>{
+    const el = document.getElementById('anchor-'+n);
+    if(el){
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.style.boxShadow = '0 0 0 2px var(--gold)';
+      setTimeout(()=> el.style.boxShadow='', 900);
+    }
+  }, targetTab !== currentTab ? 80 : 0);
+  closeFlagsPanel();
+}
+
+/* ============================================================
+   4. TIMER
+   ============================================================ */
+function startTimer(){
+  updateTimerDisplay();
+  timerInterval = setInterval(()=>{
+    remainingSeconds--;
+    if(remainingSeconds <= 0){
+      remainingSeconds = 0;
+      clearInterval(timerInterval);
+      updateTimerDisplay();
+      autoSubmit();
+      return;
+    }
+    updateTimerDisplay();
+    saveProgress();
+  }, 1000);
+}
+
+function updateTimerDisplay(){
+  const m = Math.floor(remainingSeconds/60).toString().padStart(2,'0');
+  const s = (remainingSeconds%60).toString().padStart(2,'0');
+  const el = document.getElementById('sb-timer');
+  el.textContent = m+':'+s;
+  el.classList.toggle('warn', remainingSeconds <= 600 && remainingSeconds > 0);
+}
+
+function autoSubmit(){
+  document.getElementById('overlay-submit').classList.remove('show');
+  showToast('Hết giờ — hệ thống tự động nộp bài...');
+  doSubmit(true);
+}
+
+/* ============================================================
+   5. HIGHLIGHT (4 màu, free-range, không ngắt dòng)
+   ============================================================ */
+let hlActiveColor = null;
+const hlToolbar = document.getElementById('hl-toolbar');
+
+document.querySelectorAll('.hl-swatch').forEach(sw=>{
+  sw.addEventListener('mousedown', e=> e.preventDefault()); // giữ selection
+  sw.addEventListener('click', ()=> applyHighlight(sw.dataset.c));
+});
+document.getElementById('hl-erase').addEventListener('mousedown', e=> e.preventDefault());
+document.getElementById('hl-erase').addEventListener('click', removeHighlight);
+
+function tryShowToolbarFromSelection(){
+  if(isReviewMode) return;
+  const sel = window.getSelection();
+  if(!sel || sel.isCollapsed || sel.rangeCount===0){ hideToolbar(); return; }
+  const range = sel.getRangeAt(0);
+  const container = document.getElementById('split-container');
+  if(!container.contains(range.commonAncestorContainer)){ hideToolbar(); return; }
+  const rect = range.getBoundingClientRect();
+  if(rect.width===0 && rect.height===0){ hideToolbar(); return; }
+  showToolbarAt(rect);
+}
+
+// Bắt mouseup ở mức document (không chỉ split-container) để không bỏ lỡ
+// trường hợp học sinh kéo chọn rồi thả chuột hơi lệch ra ngoài khung.
+document.addEventListener('mouseup', (e)=>{
+  // bỏ qua nếu vừa click vào chính toolbar (tránh đóng ngay khi đang chọn màu)
+  if(hlToolbar.contains(e.target)) return;
+  setTimeout(tryShowToolbarFromSelection, 5);
+});
+// Hỗ trợ thiết bị cảm ứng (tablet/laptop màn cảm ứng)
+document.addEventListener('touchend', (e)=>{
+  if(hlToolbar.contains(e.target)) return;
+  setTimeout(tryShowToolbarFromSelection, 60);
+});
+
+function showToolbarAt(rect){
+  hlToolbar.classList.add('show');
+  // hl-toolbar dùng position:fixed -> tọa độ phải lấy trực tiếp từ
+  // getBoundingClientRect() (viewport-relative), KHÔNG cộng scrollX/scrollY.
+  const toolbarHeight = 40;
+  const toolbarWidth = 160;
+  let top = rect.top - toolbarHeight - 8;
+  if(top < 8) top = rect.bottom + 8; // nếu sát mép trên, hiện toolbar bên dưới vùng chọn thay vì bị che/lệch
+  let left = rect.left + rect.width/2 - toolbarWidth/2;
+  left = Math.max(8, Math.min(left, window.innerWidth - toolbarWidth - 8));
+  top = Math.min(top, window.innerHeight - toolbarHeight - 8);
+  hlToolbar.style.top = top + 'px';
+  hlToolbar.style.left = left + 'px';
+}
+function hideToolbar(){ hlToolbar.classList.remove('show'); }
+
+function applyHighlight(color){
+  const sel = window.getSelection();
+  if(!sel || sel.rangeCount===0) return;
+  const range = sel.getRangeAt(0);
+  if(range.collapsed) return;
+
+  // Nếu vùng chọn đã nằm gọn trong 1 mark cùng màu -> coi như "click lại để tắt"
+  const ancestor = range.commonAncestorContainer;
+  const parentMark = ancestor.nodeType===1 ? ancestor.closest?.('mark') : ancestor.parentElement?.closest?.('mark');
+  if(parentMark && parentMark.classList.contains('hl-'+color) && sel.toString() === parentMark.textContent){
+    unwrapMark(parentMark);
+    sel.removeAllRanges();
+    hideToolbar();
+    saveHighlights();
+    return;
+  }
+
+  wrapRangeWithMark(range, color);
+  sel.removeAllRanges();
+  hideToolbar();
+  saveHighlights();
+}
+
+function removeHighlight(){
+  const sel = window.getSelection();
+  if(!sel || sel.rangeCount===0) return;
+  const range = sel.getRangeAt(0);
+  const container = range.commonAncestorContainer;
+  const marks = (container.nodeType===1 ? container : container.parentElement).querySelectorAll?.('mark') || [];
+  // tắt mọi mark giao với selection
+  const allMarks = document.querySelectorAll('#split-container mark');
+  allMarks.forEach(m=>{
+    if(sel.containsNode(m, true) || range.intersectsNode?.(m)){
+      unwrapMark(m);
+    }
+  });
+  sel.removeAllRanges();
+  hideToolbar();
+  saveHighlights();
+}
+
+function unwrapMark(mark){
+  const parent = mark.parentNode;
+  while(mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+  parent.removeChild(mark);
+  parent.normalize();
+}
+
+/* Wrap selection an toàn dùng splitText + insertBefore/appendChild
+   (tránh lỗi cắt text giữa từ do TreeWalker boundary handling) */
+function wrapRangeWithMark(range, color){
+  const startNode = range.startContainer;
+  const endNode = range.endContainer;
+
+  // Trường hợp đơn giản: selection nằm trong 1 text node
+  if(startNode === endNode && startNode.nodeType === 3){
+    // QUAN TRỌNG: Range là "live" — gọi splitText() trên node mà range đang
+    // trỏ vào sẽ khiến trình duyệt tự động cập nhật lại range.startOffset/
+    // endOffset theo cấu trúc DOM mới. Vì vậy phải chụp lại (snapshot) 2 giá
+    // trị offset thành biến thường NGAY TỪ ĐẦU, không được đọc range.xxx sau
+    // khi đã gọi splitText (đây chính là nguyên nhân gây lỗi highlight bị cắt
+    // chỉ còn vài ký tự thay vì toàn bộ vùng đã bôi đen).
+    const startOffset = range.startOffset;
+    const endOffset = range.endOffset;
+    const text = startNode;
+    const after = text.splitText(startOffset);
+    after.splitText(endOffset - startOffset);
+    const mark = document.createElement('mark');
+    mark.className = 'hl-' + color;
+    text.parentNode.insertBefore(mark, after);
+    mark.appendChild(after);
+    return;
+  }
+
+  // Trường hợp selection trải nhiều node: dùng TreeWalker thu thập
+  // các text node nằm trong range, rồi wrap từng đoạn giao nhau.
+  const root = range.commonAncestorContainer.nodeType === 1
+    ? range.commonAncestorContainer
+    : range.commonAncestorContainer.parentNode;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node){
+      return range.intersectsNode(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+  const nodes = [];
+  let n;
+  while((n = walker.nextNode())) nodes.push(n);
+
+  // Snapshot toàn bộ offset cần thiết TRƯỚC khi gọi bất kỳ splitText() nào,
+  // vì range là live và sẽ tự cập nhật offset theo DOM mới ngay khi node
+  // bị tách — đọc range.startOffset/endOffset giữa chừng vòng lặp là không an toàn.
+  const rangeStartContainer = range.startContainer;
+  const rangeEndContainer = range.endContainer;
+  const rangeStartOffset = range.startOffset;
+  const rangeEndOffset = range.endOffset;
+
+  const segments = nodes.map(node=>{
+    const start = (node === rangeStartContainer) ? rangeStartOffset : 0;
+    const end = (node === rangeEndContainer) ? rangeEndOffset : node.length;
+    return { node, start, end };
+  });
+
+  segments.forEach(({node, start, end})=>{
+    if(start >= end) return;
+    let target = node;
+    if(end < node.length){ target.splitText(end); }
+    if(start > 0){ target = target.splitText(start); }
+    const mark = document.createElement('mark');
+    mark.className = 'hl-' + color;
+    target.parentNode.insertBefore(mark, target);
+    mark.appendChild(target);
+  });
+}
+
+function saveHighlights(){
+  const passagePanel = document.getElementById('panel-passage');
+  const passageBody = passagePanel?.querySelector('.passage-body');
+  const passageHtml = passageBody?.innerHTML || '';
+
+  // Cập nhật cache in-memory ngay lập tức để switchTab không bị dùng bản cũ
+  if(passagePanel) passageHtmlCache[currentTab] = passagePanel.innerHTML;
+
+  // Lưu vào localStorage để khôi phục khi reload trang
+  let store = JSON.parse(localStorage.getItem(LS_PREFIX+'highlights') || '{}');
+  store[currentTab] = { passage: passageHtml, questionsSnapshotTime: Date.now() };
+  store[currentTab].marksPassage = extractMarksMap(passagePanel);
+  store[currentTab].marksQuestions = extractMarksMap(document.getElementById('panel-questions'));
+  localStorage.setItem(LS_PREFIX+'highlights', JSON.stringify(store));
+}
+
+function extractMarksMap(container){
+  // Lưu danh sách {path, color, text} đơn giản hoá: dùng cách lưu toàn bộ
+  // innerHTML tĩnh phần passage (an toàn vì passage không có input).
+  // Với panel câu hỏi (có input), ta chỉ lưu mark nằm trong .qtext (text tĩnh).
+  const result = [];
+  container.querySelectorAll('mark').forEach((m, idx)=>{
+    result.push({ idx, color: m.className.replace('hl-',''), text: m.textContent });
+  });
+  return result;
+}
+
+/* Khôi phục highlight: đơn giản hoá — vì passage HTML tĩnh, ta lưu/khôi phục
+   trực tiếp bằng cách re-render passage rồi áp lại mark theo text match
+   tuần tự (best-effort). Đây là phương án ổn định cho nội dung tĩnh. */
+function restoreHighlights(){
+  const store = JSON.parse(localStorage.getItem(LS_PREFIX+'highlights') || '{}');
+
+  // Khôi phục highlight cho tab hiện tại
+  const data = store[currentTab];
+  if(data){
+    reapplyMarksByOrder(document.getElementById('panel-passage'), data.marksPassage || []);
+    reapplyMarksByOrder(document.getElementById('panel-questions'), data.marksQuestions || []);
+    // Cập nhật cache sau khi đã re-apply marks
+    const panel = document.getElementById('panel-passage');
+    if(panel) passageHtmlCache[currentTab] = panel.innerHTML;
+  }
+}
+
+function reapplyMarksByOrder(container, marksList){
+  marksList.forEach(item=>{
+    const range = findTextRange(container, item.text);
+    if(range){ wrapRangeWithMark(range, item.color); }
+  });
+}
+
+function findTextRange(container, searchText){
+  if(!searchText) return null;
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
+  let node;
+  while((node = walker.nextNode())){
+    const idx = node.textContent.indexOf(searchText);
+    if(idx !== -1){
+      const range = document.createRange();
+      range.setStart(node, idx);
+      range.setEnd(node, idx + searchText.length);
+      return range;
+    }
+  }
+  return null;
+}
+
+/* ============================================================
+   ⚠️ 6. COPY PROTECTION — KHÓA, KHÔNG ĐƯỢC XÓA/SỬA/BỎ QUA
+   ------------------------------------------------------------
+   AI STUDIO / BẤT KỲ CÔNG CỤ MERGE NÀO: đây là tính năng vận
+   hành bắt buộc của G.EDU — ngăn học sinh copy đáp án từ passage
+   dán sang phần trả lời. TUYỆT ĐỐI không được xóa, comment lại,
+   rút gọn, hay bỏ sót khối này khi xử lý/merge nội dung đề thi.
+   Nếu cần thêm nội dung đề thi, chỉ sửa các biến ở mục "0. CONFIG",
+   "1. PASSAGES & QUESTIONS DATA" và "2. ĐÁP ÁN ĐÚNG" — KHÔNG đụng
+   vào khối COPY PROTECTION này.
+
+   Cơ chế tự bảo vệ: toàn bộ logic nằm trong hàm initCopyProtection()
+   được gọi lại ở NHIỀU điểm chốt (lúc tải trang, lúc vào màn thi,
+   mỗi lần chuyển tab) + có watchdog setInterval tự kiểm tra và tự
+   gắn lại listener nếu phát hiện bị thiếu — phòng trường hợp công
+   cụ merge bên ngoài vô tình xóa mất đoạn code này.
+   ============================================================ */
+function initCopyProtection(){
+  const container = document.getElementById('split-container');
+  if(!container) return;
+  if(container.dataset.copyProtected === '1') return; // đã gắn rồi, tránh gắn trùng
+
+  ['copy','cut','contextmenu'].forEach(evt=>{
+    container.addEventListener(evt, copyProtectionBlockHandler);
+  });
+  document.addEventListener('keydown', copyProtectionKeydownHandler);
+
+  container.dataset.copyProtected = '1';
+}
+
+function copyProtectionBlockHandler(e){
+  const tag = e.target.tagName;
+  if(tag==='INPUT' || tag==='SELECT' || tag==='TEXTAREA') return; // cho phép thao tác bình thường trong field
+  e.preventDefault();
+}
+
+function copyProtectionKeydownHandler(e){
+  const tag = e.target.tagName;
+  if(tag==='INPUT' || tag==='SELECT' || tag==='TEXTAREA') return;
+  const container = document.getElementById('split-container');
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='c'){
+    if(container && container.contains(e.target)) e.preventDefault();
+  }
+}
+
+initCopyProtection();
+
+// Watchdog: kiểm tra định kỳ mỗi 3 giây, nếu vì lý do gì đó cờ
+// dataset.copyProtected bị mất (vd DOM bị render/thay thế lại) thì
+// tự động gắn lại listener ngay lập tức, không cần reload trang.
+setInterval(()=>{
+  const container = document.getElementById('split-container');
+  if(container && container.dataset.copyProtected !== '1'){
+    console.warn('[G.EDU LOCK] Phát hiện tính năng khóa copy bị mất — đã tự động kích hoạt lại.');
+    initCopyProtection();
+  }
+}, 3000);
+
+/* ============================================================
+   7. LOCALSTORAGE — SAVE / RESTORE (2 scenario)
+   ============================================================ */
+function saveProgress(){
+  const data = {
+    name: studentInfo.name,
+    class: studentInfo.class,
+    answers, flags,
+    remainingSeconds,
+    isSubmitted,
+    lastPayload,
+    savedAt: Date.now()
+  };
+  localStorage.setItem(LS_PREFIX+'progress', JSON.stringify(data));
+}
+
+function loadProgressFor(name, cls){
+  const raw = localStorage.getItem(LS_PREFIX+'progress');
+  if(!raw) return null;
+  try{
+    const data = JSON.parse(raw);
+    if(data.name === name && data.class === cls) return data;
+  }catch(e){}
+  return null;
+}
+
+/* ============================================================
+   8. SUBMIT FLOW
+   ============================================================ */
+document.getElementById('btn-submit').addEventListener('click', ()=>{
+  const answeredCount = Object.keys(answers).filter(k=>!k.includes('-')).length;
+  document.getElementById('modal-answered-count').textContent = answeredCount;
+  const unansweredEl = document.getElementById('modal-unanswered-warn');
+  const missing = TOTAL_QUESTIONS - answeredCount;
+  unansweredEl.innerHTML = missing > 0 ? `Còn <b>${missing}</b> câu chưa trả lời.` : '';
+  verifyLockedNotices();
+  document.getElementById('overlay-submit').classList.add('show');
+});
+document.getElementById('btn-cancel-submit').addEventListener('click', ()=>{
+  document.getElementById('overlay-submit').classList.remove('show');
+});
+document.getElementById('btn-confirm-submit').addEventListener('click', ()=>{
+  document.getElementById('overlay-submit').classList.remove('show');
+  doSubmit(false);
+});
+
+function gradeAnswers(){
+  let correctCount = 0;
+  for(let n=1; n<=TOTAL_QUESTIONS; n++){
+    const correct = (CORRECT_ANSWERS[n] || '').toString().trim().toLowerCase();
+    const given = (answers[n] || '').toString().trim().toLowerCase();
+    if(correct && given && correct === given) correctCount++;
+  }
+  return correctCount;
+}
+
+function normalizeAnswersForSubmission(){
+  // chuyển answers (có thể chứa key dạng "19-20" mảng) thành object phẳng numeric keys
+  const out = {};
+  for(let n=1; n<=TOTAL_QUESTIONS; n++){
+    out[n] = answers[n] || '';
+  }
+  return out;
+}
+
+function doSubmit(isAuto){
+  if(isSubmitted) return;
+  isSubmitted = true;
+  if(timerInterval) clearInterval(timerInterval);
+
+  const correctCount = gradeAnswers();
+  const payload = {
+    test_name: TEST_NAME,
+    name: studentInfo.name,
+    cls: studentInfo.class,
+    totalScore: correctCount,
+    timestamp: new Date().toISOString(),
+    answers: normalizeAnswersForSubmission()
+  };
+  lastPayload = payload;
+  saveProgress();
+  sendToSheet(payload);
+  showResultScreen(correctCount);
+}
+
+/* ---------- GAS submission (GET, fetch primary + Image fallback) ---------- */
+function sendToSheet(payload){
+  const queryParams = new URLSearchParams();
+  queryParams.append('test_name', payload.test_name);
+  queryParams.append('name', payload.name);
+  queryParams.append('cls', payload.cls);
+  queryParams.append('totalScore', payload.totalScore);
+  queryParams.append('timestamp', payload.timestamp);
+  queryParams.append('answers', JSON.stringify(payload.answers));
+  const finalUrl = `${GAS_URL}?${queryParams.toString()}`;
+
+  fetch(finalUrl, { method:'GET', mode:'no-cors', keepalive:true })
+    .then(()=> console.log('Đã gửi dữ liệu qua Fetch GET'))
+    .catch((err)=>{
+      console.error('Lỗi Fetch GET, fallback Image beacon:', err);
+      try{ const img = new Image(); img.src = finalUrl; }catch(e){ console.error('Lỗi Image beacon:', e); }
+    });
+}
+
+/* ============================================================
+   9. RESULT / ANSWER SHEET / REVIEW SCREENS
+   ============================================================ */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showResultScreen(correctCount){
+  document.getElementById('result-score').textContent = correctCount + '/' + TOTAL_QUESTIONS;
+  document.getElementById('result-band').textContent = computeBandScore(correctCount);
+  document.getElementById('result-name').textContent = studentInfo.name;
+  document.getElementById('result-test-name').textContent = TEST_LABEL;
+  document.getElementById('sheet-name').textContent = studentInfo.name;
+  document.getElementById('sheet-class').textContent = studentInfo.class;
+  showScreen('screen-result');
+  verifyLockedNotices();
+}
+
+/* Band Score ước tính theo thang quy đổi IELTS Academic Reading chuẩn (40 câu).
+   TODO[AI STUDIO]: có thể tinh chỉnh bảng quy đổi nếu đề có thang điểm riêng. */
+function computeBandScore(correct){
+  // Bảng quy đổi IELTS Academic Reading chuẩn (40 câu)
+  const table = [
+    [39,40,9.0],[37,38,8.5],[35,36,8.0],[33,34,7.5],[30,32,7.0],
+    [27,29,6.5],[23,26,6.0],[20,22,5.5],[16,19,5.0],[13,15,4.5],
+    [10,12,4.0],[7,9,3.5],[5,6,3.0],[3,4,2.5]
+  ];
+  for(const [min,max,band] of table){
+    if(correct >= min && correct <= max) return band.toFixed(1);
+  }
+  return correct <= 2 ? '2.0' : '—';
+}
+
+document.getElementById('btn-go-sheet').addEventListener('click', ()=>{
+  renderSheetGrid();
+  showScreen('screen-sheet');
+  verifyLockedNotices();
+});
+
+function renderSheetGrid(){
+  const grid = document.getElementById('sheet-grid');
+  grid.innerHTML = '';
+  for(let n=1; n<=TOTAL_QUESTIONS; n++){
+    const cell = document.createElement('div');
+    cell.className = 'sheet-cell';
+    const val = answers[n];
+    cell.innerHTML = `<div class="n">Câu ${n}</div><div class="v ${val?'':'empty'}">${val ? escapeHtml(val) : 'Bỏ trống'}</div>`;
+    grid.appendChild(cell);
+  }
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+document.getElementById('btn-go-review').addEventListener('click', ()=>{
+  enterReviewMode();
+});
+
+function enterReviewMode(){
+  isReviewMode = true;
+  document.getElementById('review-banner').classList.add('show');
+  document.getElementById('split-container').classList.add('locked-select');
+  document.getElementById('btn-submit').style.display = 'none';
+  renderPassage();
+  renderQuestions();
+  restoreHighlights();
+  showScreen('screen-exam');
+}
+
+document.getElementById('btn-back-to-result').addEventListener('click', ()=>{
+  showScreen('screen-result');
+});
+
+/* ============================================================
+   10. FLAGGED QUESTIONS PANEL
+   ============================================================ */
+document.getElementById('btn-open-flags').addEventListener('click', renderFlagsPanel);
+document.getElementById('btn-close-flags').addEventListener('click', closeFlagsPanel);
+function closeFlagsPanel(){ document.getElementById('overlay-flags').classList.remove('show'); }
+
+function renderFlagsPanel(){
+  const body = document.getElementById('flagpanel-body');
+  const flaggedNs = Object.keys(flags).filter(n=>flags[n]).map(Number).sort((a,b)=>a-b);
+  if(flaggedNs.length === 0){
+    body.innerHTML = `<div class="flagpanel-empty">${LOCKED_NOTICES['flagpanel-empty']}</div>`;
+  } else {
+    body.innerHTML = '';
+    flaggedNs.forEach(n=>{
+      const row = document.createElement('div');
+      row.className = 'flagitem';
+      const ans = answers[n];
+      row.innerHTML = `
+        <div class="flagitem-left">
+          <div class="flagitem-num">${n}</div>
+          <div class="flagitem-ans ${ans?'':'empty'}">${ans ? 'Đã trả lời: '+escapeHtml(ans) : 'Chưa trả lời'}</div>
+        </div>
+        <div class="flagitem-go">Đi tới →</div>`;
+      row.addEventListener('click', ()=> goToQuestion(n));
+      body.appendChild(row);
+    });
+  }
+  document.getElementById('overlay-flags').classList.add('show');
+}
+
+/* ============================================================
+   11. RESIZER (split panel)
+   ============================================================ */
+const resizer = document.getElementById('resizer');
+const splitContainer = document.getElementById('split-container');
+const panelLeft = document.getElementById('panel-passage');
+const panelRight = document.getElementById('panel-questions');
+let isResizing = false;
+
+resizer.addEventListener('mousedown', (e)=>{
+  isResizing = true;
+  resizer.classList.add('active');
+  document.body.style.userSelect = 'none';
+});
+document.addEventListener('mousemove', (e)=>{
+  if(!isResizing) return;
+  const containerRect = splitContainer.getBoundingClientRect();
+  let leftWidthPct = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+  leftWidthPct = Math.max(25, Math.min(75, leftWidthPct));
+  panelLeft.style.width = leftWidthPct + '%';
+  panelRight.style.width = (100 - leftWidthPct) + '%';
+  localStorage.setItem(LS_PREFIX+'splitpos', leftWidthPct);
+});
+document.addEventListener('mouseup', ()=>{
+  if(isResizing){
+    isResizing = false;
+    resizer.classList.remove('active');
+    document.body.style.userSelect = '';
+  }
+});
+function restoreSplitPos(){
+  const saved = localStorage.getItem(LS_PREFIX+'splitpos');
+  if(saved){
+    panelLeft.style.width = saved + '%';
+    panelRight.style.width = (100 - parseFloat(saved)) + '%';
+  }
+}
+
+/* ============================================================
+   12. TOAST
+   ============================================================ */
+let toastTimer = null;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 3200);
+}
+
+/* ============================================================
+   13. LOGIN / BOOTSTRAP
+   ============================================================ */
+document.getElementById('btn-start').addEventListener('click', attemptLogin);
+document.getElementById('input-class').addEventListener('keydown', (e)=>{ if(e.key==='Enter') attemptLogin(); });
+
+function attemptLogin(){
+  const nameInp = document.getElementById('input-name');
+  const classInp = document.getElementById('input-class');
+  const name = nameInp.value.trim().toUpperCase();
+  const cls = classInp.value.trim().toUpperCase();
+  const errEl = document.getElementById('login-error');
+
+  if(!name || !cls){
+    errEl.textContent = 'Vui lòng nhập đầy đủ Họ tên và Lớp.';
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+  studentInfo = { name, class: cls };
+
+  document.getElementById('sb-student-name').textContent = name;
+  document.getElementById('sb-student-class').textContent = cls;
+
+  const existing = loadProgressFor(name, cls);
+  if(existing && existing.isSubmitted){
+    // Scenario 2: đã nộp -> khôi phục thẳng kết quả
+    answers = existing.answers || {};
+    flags = existing.flags || {};
+    isSubmitted = true;
+    lastPayload = existing.lastPayload;
+    bootstrapExamUI(false);
+    const correctCount = existing.lastPayload ? existing.lastPayload.totalScore : gradeAnswers();
+    showResultScreen(correctCount);
+    return;
+  }
+
+  if(existing && !existing.isSubmitted){
+    // Scenario 1: chưa nộp -> khôi phục bài làm dở
+    answers = existing.answers || {};
+    flags = existing.flags || {};
+    remainingSeconds = typeof existing.remainingSeconds === 'number' ? existing.remainingSeconds : DURATION_MIN*60;
+    showToast('Đã khôi phục bài làm trước đó.');
+  } else {
+    answers = {}; flags = {};
+    remainingSeconds = DURATION_MIN * 60;
+  }
+
+  bootstrapExamUI(true);
+}
+
+function bootstrapExamUI(startTimerNow){
+  showScreen('screen-exam');
+  renderTabs();
+  renderPassage();
+  renderQuestions();
+  renderQMap();
+  restoreSplitPos();
+  restoreHighlights();
+  if(startTimerNow) startTimer();
+  saveProgress();
+  verifyLockedNotices();
+  initCopyProtection();
+}
+
+/* Lưu thời gian còn lại ngay khi học sinh đóng tab / reload trang —
+   tránh mất vài giây do setInterval chưa kịp save ở giây cuối cùng.
+   Dùng synchronous localStorage.setItem trong beforeunload là an toàn. */
+window.addEventListener('beforeunload', ()=>{
+  if(!isSubmitted && studentInfo.name){
+    saveProgress();
+  }
+});
+
+/* fix tỉ lệ màn hình: đảm bảo nút Nộp bài luôn trong viewport bằng flex column
+   + media query (max-height:720px) đã xử lý ở CSS. Không cần JS bổ sung trừ khi
+   cần test thực tế trên thiết bị cụ thể. */
+</script>
+</body>
+</html>
